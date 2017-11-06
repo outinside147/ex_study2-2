@@ -28,6 +28,9 @@ int main()
 	Mat para_map = src.clone();
 	Mat line_map = src.clone();
 	Mat word_map = src.clone();
+
+	int para_row = 0;
+
 	
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
@@ -38,21 +41,22 @@ int main()
 	printf("Found textline = %d , word = %d .\n", line_boxes->n,word_boxes->n);
 	ofs << "found textline = " << line_boxes->n << ",word = " << word_boxes->n << endl << endl;
 
-	for (int i = 0; i < para_boxes->n; i++) {		
+	for (int i = 0; i < para_boxes->n; i++) {
 		BOX* box = boxaGetBox(para_boxes, i, L_CLONE); //boxes->n .. number of box in ptr array
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 
 		// 認識結果をテキストファイルとして出力する
-		ofs << "Para_Box["<< i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+		//ofs << "Para_Box["<< i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 
 		// 分割した範囲を切り取ってそれぞれの画像にする
 		Rect rect(box->x, box->y, box->w, box->h);
 		Mat para_img(src, rect);
-		imwrite("../image/splitImages/para_" + to_string(i) + ".png", para_img);
-		
+		para_row = box->h;
+		//imwrite("../image/splitImages/para_" + to_string(i) + ".png", para_img);
+
 		// 画像に分割した範囲を描写する
-		rectangle(para_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,0,255),1,4);
-		imwrite("../image/splitImages/para_map.png", para_map);
+		//rectangle(para_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,0,255),1,4);
+		//imwrite("../image/splitImages/para_map.png", para_map);
 	}
 
 	for (int i = 0; i < line_boxes->n; i++) {
@@ -60,38 +64,36 @@ int main()
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 		char* ocrResult = api->GetUTF8Text();
 		int conf = api->MeanTextConf();
-
-
-		// 認識結果をテキストファイルとして出力する
-		ofs << "Textline_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text=" << ocrResult << endl;
-
-		// 分割した範囲を切り取ってそれぞれの画像にする
-		Rect rect(box->x, box->y, box->w, box->h);
-		Mat line_img(src, rect);
-		imwrite("../image/splitImages/line_" + to_string(i) + ".png", line_img);
-
-		// 画像に分割した範囲を描写する
-		rectangle(line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 255, 0), 1, 4);
-		imwrite("../image/splitImages/line_map.png", line_map);
+		ofs << "Textline_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 	}
-	
+
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE); //para_boxes->n .. number of box in ptr array
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 		char* ocrResult = api->GetUTF8Text();
 		int conf = api->MeanTextConf();
-
-		// 認識結果をテキストファイルとして出力する
-		ofs << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text=" << ocrResult << endl;
-
-		// 分割した範囲を切り取ってそれぞれの画像にする
-		Rect rect(box->x, box->y, box->w, box->h);
-		Mat word_img(src, rect);
-		imwrite("../image/splitImages/word_" + to_string(i) + ".png", word_img);
-
-		// 画像に分割した範囲を描写する
-		rectangle(word_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
-		imwrite("../image/splitImages/word_map.png", word_map);
+		ofs << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 	}
+
+	for (int i = 0; i < line_boxes->n; i++){
+		for (int j = 0; j < word_boxes->n; j++){
+			BOX* line_box = boxaGetBox(line_boxes, i, L_CLONE); //1行の座標 (x,y,w,h)
+			BOX* word_box = boxaGetBox(word_boxes, i, L_CLONE); //1単語の座標 (x,y,w,h)
+			int top = para_row;
+	
+			for (int k = line_box->x; k < line_box->x + line_box->w; k++){
+				for (int m = line_box->y; m < line_box->y + line_box->h; m++){
+					if (k == word_box->x && m == word_box->y){
+						// 一行の中にある単語の中で最も上にある物の座標を得る
+						if (m < top){
+							top = m;
+							cout << "top=" << top << endl;
+						}
+					}
+				}
+			}
+		}
+	}
+
 }
 

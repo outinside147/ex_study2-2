@@ -1,0 +1,41 @@
+found 13 textline image components
+
+Box[0]: x=26, y=97, w=941, h=16, confidence: 78, text: Devebpers can use ubtesse ract or API to bui\d their own applicatxon. If you need bindings to Iibtesseract (or
+
+
+Box[1]: x=26, y=124, w=654, h=16, confidence: 78, text: other programrmng Vanguages, please see the section on Addons wikl page.
+
+
+Box[2]: x=26, y=168, w=843, h=16, confidence: 82, text: Documentauon of Tesseram generated from source code by doxygen can be found on .
+
+
+Box[3]: x=43, y=323, w=824, h=16, confidence: 83, text: The code in this repository is licensed under the Apache License, Version 2.9 (the "License");
+
+
+Box[4]: x=43, y=344, w=560, h=15, confidence: 77, text: you may nut use ms me except in compliance with the License.
+
+
+Box[5]: x=43, y=365, w=342, h=15, confidence: 81, text: You may obtain a copy uf the License at
+
+
+Box[6]: x=70, y=406, w=368, h=15, confidence: 78, text: mm : //ww. apache. org/licenses/LIcENsE—2 . a
+
+
+Box[7]: x=43, y=447, w=589, h=14, confidence: 76, text: Unless required by applicable law ur agreed m m writing, snftware
+
+
+Box[8]: x=43, y=467, w=569, h=14, confidence: 82, text: distributed under the License is distributed on an "AS IS" BASIS,
+
+
+Box[9]: x=42, y=488, w=631, h=14, confidence: 76, text: WITHOUT WARRANTIES OR CONDITIONS DF ANY KIND. extner express nr implied.
+
+
+Box[10]: x=43, y=508, w=588, h=15, confidence: 80, text: see the License for the specific language governing permissions and
+
+
+Box[11]: x=44, y=528, w=260, h=12, confidence: 81, text: Iimitatmns under the License.
+
+
+Box[12]: x=26, y=587, w=832, h=17, confidence: 80, text: NOTE: This software depends on other packages that may be licensed under dmereni open source licenses.
+
+

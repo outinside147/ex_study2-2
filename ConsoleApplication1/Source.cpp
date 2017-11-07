@@ -1,4 +1,3 @@
-
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <tesseract/baseapi.h>
@@ -24,7 +23,7 @@ int main()
 	// 結果をテキストに出力
 	ofstream ofs("../image/component.txt");
 	ofstream log("../image/log.txt");
-	Mat src = imread("../../../source_images/img1_3_2.jpg",1);
+	Mat src = imread("../../../source_images/img1_3_2.jpg", 1);
 	Pix *image = pixRead("../../../source_images/img1_3_2.jpg");
 	Mat para_map = src.clone();
 	Mat line_map = src.clone();
@@ -32,15 +31,15 @@ int main()
 
 	int para_row = 0;
 
-	
+
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
 	api->SetImage(image);
 	Boxa* para_boxes = api->GetComponentImages(RIL_PARA, true, NULL, NULL); //段落
 	Boxa* line_boxes = api->GetComponentImages(RIL_TEXTLINE, true, NULL, NULL); //行
 	Boxa* word_boxes = api->GetComponentImages(RIL_WORD, true, NULL, NULL); //単語
-	printf("Found textline = %d , word = %d .\n", line_boxes->n,word_boxes->n);
-	ofs << "found textline = " << line_boxes->n << ",word = " << word_boxes->n << endl << endl;
+	printf("Found textline = %d , word = %d .\n", line_boxes->n, word_boxes->n);
+	//ofs << "found textline = " << line_boxes->n << ",word = " << word_boxes->n << endl << endl;
 
 	for (int i = 0; i < para_boxes->n; i++) {
 		BOX* box = boxaGetBox(para_boxes, i, L_CLONE); //boxes->n .. number of box in ptr array
@@ -62,45 +61,64 @@ int main()
 
 	for (int i = 0; i < line_boxes->n; i++) {
 		BOX* box = boxaGetBox(line_boxes, i, L_CLONE);
+		if (box->h > 60 || box->h <= 15){
+			boxaRemoveBox(line_boxes, i);
+			cout << line_boxes->n << endl;
+			cout << "line Deleted : i=" << i << ", box->x=" << box->x << ", box->y=" << box->y << ", box->h=" << box->h << endl;
+		}
+	}
+
+	for (int i = 0; i < line_boxes->n; i++) {
+		BOX* box = boxaGetBox(line_boxes, i, L_CLONE);
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 		char* ocrResult = api->GetUTF8Text();
 		int conf = api->MeanTextConf();
-		ofs << "Textline_Box[" << i << "]: x=" << box->x << "~" << box->x+box->w << ", y=" << box->y << "~" << box->y+box->h << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
-		
-		//Rect rect(box->x, box->y, box->w, box->h);
-		//Mat part_img(src, rect);
-		//imwrite("../image/splitImages/line_" + to_string(i) + ".png", part_img);
+		//ofs << "Textline_Box[" << i << "]: x=" << box->x << "~" << box->x + box->w << ", y=" << box->y << "~" << box->y + box->h << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 
-		//rectangle(line_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,255,0),1,4);
-		//imwrite("../image/splitImages/map/line_map.png", line_map);
-		
+		Rect rect(box->x, box->y, box->w, box->h);
+		Mat part_img(src, rect);
+		imwrite("../image/splitImages/line_" + to_string(i) + ".png", part_img);
+
+		rectangle(line_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,255,0),1,4);
+		imwrite("../image/splitImages/map/line_map.png", line_map);
+
 	}
+	
+	for (int i = 0; i < word_boxes->n; i++) {
+		BOX* box = boxaGetBox(word_boxes, i, L_CLONE); //para_boxes->n .. number of box in ptr array
+		if (box->h > 30 || box->h <= 10){
+			boxaRemoveBox(word_boxes, i);
+			cout << "word Deleted : i=" << i << ", box->x=" << box->x << ", box->y=" << box->y << ", box->h=" << box->h << endl;
+		}
+	}
+
 
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE); //para_boxes->n .. number of box in ptr array
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 		char* ocrResult = api->GetUTF8Text();
 		int conf = api->MeanTextConf();
-		ofs << "Word_Box[" << i << "]: x=" << box->x << "~" << box->x + box->w << ", y=" << box->y << "~" << box->y + box->h << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
-	
-		//Rect rect(box->x, box->y, box->w, box->h);
-		//Mat part_img(src, rect);
-		//imwrite("../image/splitImages/word_" + to_string(i) + ".png", part_img);
+		//ofs << "Word_Box[" << i << "]: x=" << box->x << "~" << box->x + box->w << ", y=" << box->y << "~" << box->y + box->h << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 
-		//rectangle(word_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
-		//imwrite("../image/splitImages/map/word_map.png", word_map);
+		Rect rect(box->x, box->y, box->w, box->h);
+		Mat part_img(src, rect);
+		imwrite("../image/splitImages/word_" + to_string(i) + ".png", part_img);
+
+		rectangle(word_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
+		imwrite("../image/splitImages/map/word_map.png", word_map);
 	}
 
+	/*
 	for (int i = 0; i < line_boxes->n; i++){
 		int top = para_row;
 		for (int j = 0; j < word_boxes->n; j++){
 			BOX* line_box = boxaGetBox(line_boxes, i, L_CLONE); //1行の座標 (x,y,w,h)
 			BOX* word_box = boxaGetBox(word_boxes, j, L_CLONE); //1単語の座標 (x,y,w,h)
-	
+
 			for (int k = line_box->x; k <= line_box->x + line_box->w; k++){
 				for (int m = line_box->y; m <= line_box->y + line_box->h; m++){
 					if (k == word_box->x && m == word_box->y){
-						log << "i=" << i << ", j=" << j << ", k=" << k << ", m=" << m << ", top=" << top << endl;
+						//log << "i=" << i << ", j=" << j << ", k=" << k << ", m=" << m << ", top=" << top << endl;
 
 						// 一行の中にある単語の中で最も上にある物の座標を得る
 						if (m < top){
@@ -113,5 +131,5 @@ int main()
 			//取りだした値を使っての処理　上端に合わせる
 		}
 	}
+	*/
 }
-

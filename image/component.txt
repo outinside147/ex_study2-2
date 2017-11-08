@@ -1,0 +1,11 @@
+Textline_Box[0]: x=106~603, y=28~71, w=497, h=43, confidence=59, text= j-—§
+er, the facebook effect
+
+
+Textline_Box[1]: x=102~865, y=122~174, w=763, h=52, confidence=63, text= .,.,.»ya»e .»on.«nd  %i'if?:f:":ff:'f“"'°W mm
+
+
+Textline_Box[2]: x=308~893, y=144~204, w=585, h=60, confidence=62, text= Ll Cal. |““"""'”'." '" '7" 7' ’"""' " “"' V-'”\H]g
+ght, the neigl1lmr.s \\'oul(| get peeved. If someone
+
+

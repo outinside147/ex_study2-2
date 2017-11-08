@@ -49,8 +49,8 @@ int main()
 		//ofs << "Para_Box["<< i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 
 		// 分割した範囲を切り取ってそれぞれの画像にする
-		Rect rect(box->x, box->y, box->w, box->h);
-		Mat part_img(src, rect);
+		//Rect rect(box->x, box->y, box->w, box->h);
+		//Mat part_img(src, rect);
 		para_row = box->h;
 		//imwrite("../image/splitImages/para_" + to_string(i) + ".png", part_img);
 
@@ -59,53 +59,72 @@ int main()
 		//imwrite("../image/splitImages/map/para_map.png", para_map);
 	}
 
+	// 走査した範囲かどうかを記録する配列
+	Mat scanned_pos = Mat::zeros(src.rows, src.cols,CV_8UC1);
+
+	// 明らかに誤認識しているものを消去する
+	Boxa* suit_Lboxes = boxaCreate(line_boxes->n);
 	for (int i = 0; i < line_boxes->n; i++) {
+		// 囲う長方形の高さが一定値以上あれば別の行列に格納する
 		BOX* box = boxaGetBox(line_boxes, i, L_CLONE);
-		if (box->h > 60 || box->h <= 15){
-			boxaRemoveBox(line_boxes, i);
-			cout << line_boxes->n << endl;
-			cout << "line Deleted : i=" << i << ", box->x=" << box->x << ", box->y=" << box->y << ", box->h=" << box->h << endl;
+		if (box->h > 20){
+			boxaAddBox(suit_Lboxes, box, L_CLONE);
+			printf("line extracted : i=%3d , box->x=%3d , box->y=%3d , box->w=%3d , box->h=%3d .\n",i,box->x,box->y,box->w,box->h);
 		}
 	}
 
-	for (int i = 0; i < line_boxes->n; i++) {
-		BOX* box = boxaGetBox(line_boxes, i, L_CLONE);
+	for (int i = 0; i < suit_Lboxes->n; i++) {
+		BOX* box = boxaGetBox(suit_Lboxes, i, L_CLONE);
+		// 既に走査済かどうか調べる
+		for(int j = box->x; j <= box->x + box->w; j++){
+			for (int k = box->y; k <= box->y + box->h; k++){
+				if (scanned_pos.at<unsigned char>(j, k) == 0){
+					scanned_pos.at<unsigned char>(j, k) = 1;
+				}
+				else if (scanned_pos.at<unsigned char>(j, k) == 1){
+					box = boxaGetBox(suit_Lboxes, i+1, L_CLONE); //エラー
+					printf("break , i = %3d , box->x=%3d , box->y=%3d \n", i,j,k);
+					break;
+				}
+			}
+		}
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 		char* ocrResult = api->GetUTF8Text();
 		int conf = api->MeanTextConf();
-		//ofs << "Textline_Box[" << i << "]: x=" << box->x << "~" << box->x + box->w << ", y=" << box->y << "~" << box->y + box->h << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
+		ofs << "Textline_Box[" << i << "]: x=" << box->x << "~" << box->x + box->w << ", y=" << box->y << "~" << box->y + box->h << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 
-		Rect rect(box->x, box->y, box->w, box->h);
-		Mat part_img(src, rect);
-		imwrite("../image/splitImages/line_" + to_string(i) + ".png", part_img);
+		//Rect rect(box->x, box->y, box->w, box->h);
+		//Mat part_img(src, rect);
+		//imwrite("../image/splitImages/line_" + to_string(i) + ".png", part_img);
 
 		rectangle(line_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,255,0),1,4);
-		imwrite("../image/splitImages/map/line_map.png", line_map);
+		imwrite("../image/splitImages/map_line.png", line_map);
 
 	}
 	
+	Boxa* suit_Wboxes = boxaCreate(line_boxes->n);
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE); //para_boxes->n .. number of box in ptr array
-		if (box->h > 30 || box->h <= 10){
-			boxaRemoveBox(word_boxes, i);
-			cout << "word Deleted : i=" << i << ", box->x=" << box->x << ", box->y=" << box->y << ", box->h=" << box->h << endl;
+		if (box->h > 3  && box->w > 3){
+			boxaAddBox(suit_Wboxes, box, L_CLONE);
+			printf("word extracted : i=%3d , box->x=%3d , box->y=%3d , box->w=%3d , box->h=%3d .\n", i, box->x, box->y, box->w, box->h);
 		}
 	}
 
 
-	for (int i = 0; i < word_boxes->n; i++) {
-		BOX* box = boxaGetBox(word_boxes, i, L_CLONE); //para_boxes->n .. number of box in ptr array
+	for (int i = 0; i < suit_Wboxes->n; i++) {
+		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE); //para_boxes->n .. number of box in ptr array
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 		char* ocrResult = api->GetUTF8Text();
 		int conf = api->MeanTextConf();
-		//ofs << "Word_Box[" << i << "]: x=" << box->x << "~" << box->x + box->w << ", y=" << box->y << "~" << box->y + box->h << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
+		ofs << "Word_Box[" << i << "]: x=" << box->x << "~" << box->x + box->w << ", y=" << box->y << "~" << box->y + box->h << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 
-		Rect rect(box->x, box->y, box->w, box->h);
-		Mat part_img(src, rect);
-		imwrite("../image/splitImages/word_" + to_string(i) + ".png", part_img);
+		//Rect rect(box->x, box->y, box->w, box->h);
+		//Mat part_img(src, rect);
+		//imwrite("../image/splitImages/word_" + to_string(i) + ".png", part_img);
 
 		rectangle(word_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
-		imwrite("../image/splitImages/map/word_map.png", word_map);
+		imwrite("../image/splitImages/map_word.png", word_map);
 	}
 
 	/*

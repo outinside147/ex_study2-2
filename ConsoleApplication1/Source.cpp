@@ -30,6 +30,7 @@ int main()
 	Pix *image = pixRead("../../../source_images/img1_3_2.jpg");
 	Mat para_map = src.clone();
 	Mat line_map = src.clone();
+	Mat c_line_map = src.clone();
 	Mat word_map = src.clone();
 
 	int para_row = 0;
@@ -76,29 +77,46 @@ int main()
 	}
 
 	Boxa* correct_Lboxes = boxaCreate(suit_Lboxes->n);
+	int break_flg = 0; // 初期値0 ,　flg=1
+
 	for (int i = 0; i < suit_Lboxes->n; i++) {
 		BOX* box = boxaGetBox(suit_Lboxes, i, L_CLONE);
 		lbx << "suit_Lboxes["<< i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 		// この行が既に走査済かどうか調べる
-		for (int j = box->x; j <= box->x + box->w; j++){
-			for (int k = box->y; k <= box->y + box->h; k++){
+		for (int j = box->x; j < box->x + box->w; j++){
+			for (int k = box->y; k < box->y + box->h; k++){
+				//printf("j=%3d , k=%3d\n", j, k);
 				if (scanned_pos.at<unsigned char>(k, j) == 0){
 					// 未探索であればフラグを代入
 					scanned_pos.at<unsigned char>(k, j) = 1;
 				}
 				// 走査済であれば、この行を飛ばす
 				else if (scanned_pos.at<unsigned char>(k, j) == 1){
-					if (i == suit_Lboxes->n - 1) break;
+					//if (i == suit_Lboxes->n - 1) break;
 					// 次の行を変数に格納してループを脱する
-					box = boxaGetBox(suit_Lboxes, i + 1, L_CLONE);
-					scn << "scan_area i=" << i << ", box->x=" << j << ", box->y=" << k << " break " << endl;
-					break;
+					//box = boxaGetBox(suit_Lboxes, i + 1, L_CLONE);
+					//printf("i=%3d, j=%3d, k=%3d, break\n", i, j, k);
+					//scn << "scan_area i=" << i << ", box->x=" << j << ", box->y=" << k << " break " << endl;
+					break_flg = 1;
+					//break;
 				}
-				// 未探索であれば別の配列にboxを格納
-				boxaAddBox(correct_Lboxes, box, L_CLONE);
 			}
 		}
-		rectangle(line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 255, 0), 1, 4);
+		if (break_flg == 0){
+			boxaAddBox(correct_Lboxes, box, L_CLONE);
+		}
+		break_flg = 0;
+
+		api->SetRectangle(box->x, box->y, box->w, box->h);
+		char* ocrResult = api->GetUTF8Text();
+		int conf = api->MeanTextConf();
+		ofs << "Textline_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
+
+		//Rect rect(box->x, box->y, box->w, box->h);
+		//Mat part_img(src, rect);
+		//imwrite("../image/splitImages/line_" + to_string(i) + ".png", part_img);
+
+		rectangle(line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 255, 0), 1, 4); //緑色
 		imwrite("../image/splitImages/map_line.png", line_map);
 	}
 
@@ -113,10 +131,10 @@ int main()
 		Mat part_img(src, rect);
 		imwrite("../image/splitImages/c_line_" + to_string(i) + ".png", part_img);
 
-		rectangle(line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 255, 0), 1, 4);
-		imwrite("../image/splitImages/map_c_line.png", line_map);
+		rectangle(c_line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4); //赤色
+		imwrite("../image/splitImages/map_c_line.png", c_line_map);
 	}
-	
+
 	// 明らかに誤認識している単語を消去する
 	Boxa* suit_Wboxes = boxaCreate(line_boxes->n);
 	for (int i = 0; i < word_boxes->n; i++) {

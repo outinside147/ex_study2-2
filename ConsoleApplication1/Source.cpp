@@ -75,50 +75,60 @@ int main()
 		}
 	}
 
+	Boxa* correct_Lboxes = boxaCreate(suit_Lboxes->n);
 	for (int i = 0; i < suit_Lboxes->n; i++) {
 		BOX* box = boxaGetBox(suit_Lboxes, i, L_CLONE);
 		lbx << "suit_Lboxes["<< i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
-
 		// この行が既に走査済かどうか調べる
-		for(int j = box->x; j <= box->x + box->w; j++){
+		for (int j = box->x; j <= box->x + box->w; j++){
 			for (int k = box->y; k <= box->y + box->h; k++){
 				if (scanned_pos.at<unsigned char>(k, j) == 0){
+					// 未探索であればフラグを代入
 					scanned_pos.at<unsigned char>(k, j) = 1;
 				}
+				// 走査済であれば、この行を飛ばす
 				else if (scanned_pos.at<unsigned char>(k, j) == 1){
 					if (i == suit_Lboxes->n - 1) break;
-					box = boxaGetBox(suit_Lboxes, i+1, L_CLONE);
-					scn << "scan_area i=" << i << ", box->x=" << j << ", box->y=" << k << " break " << endl;		
+					// 次の行を変数に格納してループを脱する
+					box = boxaGetBox(suit_Lboxes, i + 1, L_CLONE);
+					scn << "scan_area i=" << i << ", box->x=" << j << ", box->y=" << k << " break " << endl;
 					break;
-				}			
+				}
+				// 未探索であれば別の配列にboxを格納
+				boxaAddBox(correct_Lboxes, box, L_CLONE);
 			}
 		}
+		rectangle(line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 255, 0), 1, 4);
+		imwrite("../image/splitImages/map_line.png", line_map);
+	}
+
+	for (int i = 0; i < correct_Lboxes->n; i++){
+		BOX* box = boxaGetBox(correct_Lboxes, i, L_CLONE);
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 		char* ocrResult = api->GetUTF8Text();
 		int conf = api->MeanTextConf();
 		ofs << "Textline_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
+		
+		Rect rect(box->x, box->y, box->w, box->h);
+		Mat part_img(src, rect);
+		imwrite("../image/splitImages/c_line_" + to_string(i) + ".png", part_img);
 
-		//Rect rect(box->x, box->y, box->w, box->h);
-		//Mat part_img(src, rect);
-		//imwrite("../image/splitImages/line_" + to_string(i) + ".png", part_img);
-
-		rectangle(line_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,255,0),1,4);
-		imwrite("../image/splitImages/map_line.png", line_map);
-
+		rectangle(line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 255, 0), 1, 4);
+		imwrite("../image/splitImages/map_c_line.png", line_map);
 	}
 	
+	// 明らかに誤認識している単語を消去する
 	Boxa* suit_Wboxes = boxaCreate(line_boxes->n);
 	for (int i = 0; i < word_boxes->n; i++) {
-		BOX* box = boxaGetBox(word_boxes, i, L_CLONE); //para_boxes->n .. number of box in ptr array
+		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
 		if (box->h > 3  && box->w > 3){
 			boxaAddBox(suit_Wboxes, box, L_CLONE);
 			//printf("word extracted : i=%3d , box->x=%3d , box->y=%3d , box->w=%3d , box->h=%3d .\n", i, box->x, box->y, box->w, box->h);
 		}
 	}
 
-
 	for (int i = 0; i < suit_Wboxes->n; i++) {
-		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE); //para_boxes->n .. number of box in ptr array
+		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE);
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 		char* ocrResult = api->GetUTF8Text();
 		int conf = api->MeanTextConf();
@@ -133,6 +143,7 @@ int main()
 	}
 
 	/*
+	// 行に含まれる単語を抽出する
 	for (int i = 0; i < line_boxes->n; i++){
 		int top = para_row;
 		for (int j = 0; j < word_boxes->n; j++){
@@ -152,7 +163,7 @@ int main()
 					}
 				}
 			}
-			//取りだした値を使っての処理　上端に合わせる
+			//     取りだした値を使って全体を最上端に合わせる
 		}
 	}
 	*/

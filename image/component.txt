@@ -2,1521 +2,287 @@ Textline_Box[0]: x=106, y=28, w=497, h=43, confidence=59, text= j-—§
 er, the facebook effect
 
 
-Textline_Box[1]: x=102, y=122, w=763, h=52, confidence=63, text= .,.,.»ya»e .»on.«nd  %i'if?:f:":ff:'f“"'°W mm
+Textline_Box[1]: x=106, y=28, w=497, h=43, confidence=59, text= j-—§
+er, the facebook effect
 
 
-Textline_Box[2]: x=308, y=144, w=585, h=60, confidence=62, text= Ll Cal. |““"""'”'." '" '7" 7' ’"""' " “"' V-'”\H]g
-ght, the neigl1lmr.s \\'oul(| get peeved. If someone
+Textline_Box[2]: x=106, y=28, w=497, h=43, confidence=63, text= en}
+ar, the facebook effect
 
 
-Textline_Box[3]: x=101, y=177, w=791, h=77, confidence=72, text= lllbd MO late at night, the I1e1g1||nm uunlu 5&1 |)u:\I:u. II someone
-blvﬂhtl giﬂ luck to his room, Ins mnnmmlc had to slccp downstairs on
-‘ .. n . _
+Textline_Box[3]: x=106, y=28, w=497, h=43, confidence=63, text= en}
+ar, the facebook effect
 
 
-Textline_Box[4]: x=100, y=213, w=791, h=75, confidence=75, text= bmughn girl luck to his room, Ins mnnmmw mm [0 sleep downstairs on
-the much or drag his mattress In to mother room, Smnc people——female
+Textline_Box[4]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[5]: x=99, y=251, w=793, h=77, confidence=74, text= the c;1uch or drag his mattress in to another room, home people——fema1e
-Ind tnaIe—stopped by for days and just hung around.
+Textline_Box[5]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[6]: x=139, y=328, w=639, h=37, confidence=77, text= One oflhem was a friend of Parker's nnmcd Aaron Sitti
+Textline_Box[6]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[7]: x=97, y=330, w=782, h=76, confidence=72, text= One ofthem was a friend of l’;Irkcr'x nnmcd ,'\nmn Sirtig‘ He ha
-gaﬂicr helped create a VCYSIOH of Napster for the Macintosh. calla
+Textline_Box[7]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[8]: x=205, y=369, w=536, h=41, confidence=78, text= ped create a version of Napster for the Maci
+Textline_Box[8]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[9]: x=97, y=372, w=794, h=75, confidence=76, text= earlier helped create a version ot Nzlplstcl’ tor the Macintosh, called
-Muster, which Napster hought. Al this point he was working for a 113.
+Textline_Box[9]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[10]: x=198, y=414, w=562, h=50, confidence=72, text= vhich Napster bought. Al this point he was worki
-. 4 . I '1 ,1” ...l. ...1i..J l......\... l.....|..._I
+Textline_Box[10]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[11]: x=96, y=412, w=797, h=74, confidence=74, text= Macster, which Napster hought. Al this point he \\'-as working for a mi‘
-scent music-oriented social n£‘i\A'0l’l(C21ll(‘(l linccm. located a few blocks
+Textline_Box[11]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[12]: x=94, y=453, w=798, h=78, confidence=76, text= scent music-oriented social network called linccm. located a few blocks
-may in Palo Alto. Sittig is a quiet. sell—eiTacii1g, blond surfer type who
+Textline_Box[12]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[13]: x=94, y=495, w=798, h=74, confidence=77, text= may in Palo Alto. Sittig is a quiet. sell—etlacing, blond surfer type who
-in addition to being a programmer is :1 superb graphic designer and ty«
+Textline_Box[13]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[14]: x=92, y=536, w=801, h=76, confidence=78, text= in addition to being a programmer is :1 superb graphic designer and ty~
-pographer. But bad: then he was feeling burncd—out and unmotivatecl.
+Textline_Box[14]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[15]: x=265, y=581, w=562, h=44, confidence=77, text= rack then he was techng burncd—out and unmoti
+Textline_Box[15]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[16]: x=92, y=577, w=799, h=74, confidence=76, text= pographer‘ But back then he was feeling |Jurncd—out and unmotivated.
-Parltcrbraught him around because he thought he could help 'l'heface-
+Textline_Box[16]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[17]: x=91, y=619, w=802, h=72, confidence=77, text= Parkcrbrought him around because he thought he could help Theface-
-book, especially with design.
+Textline_Box[17]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[18]: x=131, y=680, w=259, h=52, confidence=58, text= -,--,.--....., ...w. _...D..‘
-But Sittig wasn’t showir
+Textline_Box[18]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[19]: x=356, y=701, w=298, h=31, confidence=75, text= wing a lot of initiative. “
+Textline_Box[19]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[20]: x=90, y=702, w=802, h=67, confidence=76, text= But Sittig wasn’t showing .1 lot of initiative. “I kept explaining to
-Marl: that Aaron was brilliant," saws Parker. “But A-ar(m would iust sit
+Textline_Box[20]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[21]: x=88, y=744, w=805, h=100, confidence=75, text= Mark that Aaron was brilliant," says Parker. “But Aaron would just sit
-on the couch and diddle around on his computer all (lay playing with
-fonts. Marl: km: sxwina ‘“/lm ;< chic ma rrpm urnrllwlncc up ,r,.mw
+Textline_Box[21]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[22]: x=515, y=787, w=354, h=21, confidence=79, text= s coinmitcr all (lav nlaving wi
+Textline_Box[22]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[23]: x=108, y=785, w=783, h=71, confidence=81, text= ithe couch and diddle around on his computer all day playing with
-nts. Marl: kept saying ‘Who is this guy? He's worthless. He doesn't
+Textline_Box[23]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[24]: x=88, y=827, w=805, h=67, confidence=80, text= Ionts. Mark kept saying ‘Who is this guy? He's worthless. He doesn't
-do anything.' Marl: thought it was bad for the work ethic to have him
+Textline_Box[24]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[25]: x=88, y=867, w=803, h=71, confidence=82, text= 00 anything.’ Mark thought it was bad for the work ethic to have him
-ll-Inging around seeming to do nothing." (The following year, after re-
+Textline_Box[25]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[26]: x=87, y=909, w=806, h=65, confidence=82, text= Hanging around seeming to do nothing." (The following year, after re-
-enrolling at the Universitv of California at Berkelev for a semester to
+Textline_Box[26]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[27]: x=88, y=950, w=804, h=66, confidence=81, text= Eﬂmllrng at the University of California at Berkeley for a semester to
-’l"‘l}’ Pl"ll°50PlIY. Sittig did come to work at 'l'hefaccl)ool;. He became
+Textline_Box[27]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[28]: x=87, y=992, w=805, h=67, confidence=80, text= nuuy prulosopny, bittig did come to work at Tliefacebook. He became
-one of Zuckerbergk closest contidants.)
+Textline_Box[28]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[29]: x=128, y=1033, w=389, h=58, confidence=76, text= or Luexerbergs closest conﬁdants.)
-Oftentimes the cndina <H7nrIlr\l-ni
+Textline_Box[29]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[30]: x=280, y=1070, w=257, h=33, confidence=79, text= e coding, swordplav, :
+Textline_Box[30]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[31]: x=87, y=1072, w=804, h=100, confidence=72, text= ”"'""'“°‘ "19 Coding. swordplay, and raucous meetings would
-go on well Into the night, sometimes punctuated by breaks for drink-
-“‘Svm°V|C‘Wlk:hin2. and uirl..n_m...,. ..l....:.... ’l'l... vr..... rwm‘ I‘ ...m-[mitt
+Textline_Box[31]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[32]: x=180, y=1126, w=452, h=28, confidence=72, text= .. ...... ..... lllslll, siirrictlrlrcs punctuate
+Textline_Box[32]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[33]: x=89, y=1113, w=804, h=94, confidence=73, text= igu rm weu Into the night, sometimes punctuated by breaks for drink-
-mgmovicavatching and video- ) ' ' ' ' k t
+Textline_Box[33]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-‘ . ganrc )la un . ll1UXl)()X otawor ou.
-7"}! “Mm! Hal" .. ......:....i, r l..)  . mg /\ - , L,‘
 
+Textline_Box[34]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[34]: x=186, y=1160, w=663, h=56, confidence=69, text= ""'“'“'"€~ 3"“ Video-garne playing. The Xhox got a work
-Sim: Halo a Darlilurlar r...i...;o,. <,......rm... 'r',.... m..;a=
 
+Textline_Box[35]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[35]: x=88, y=1156, w=804, h=99, confidence=70, text= "'v5"'"""““'“‘-“"18. and video-game playing. 'l'hu Xhox got a workout.
-"'1' dl‘ Pmt Halo at particular favorite. Somehow Toni Cruise be-
-°'m"F°“P0l38esiion. anrl lluuc .m......,r .. r,...-.i... 4;... r~...:... mm/in
 
+Textline_Box[36]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[36]: x=217, y=1196, w=676, h=64, confidence=72, text= "9 Halo a particular favorite. Somehow 'l'oni Cruise he-
-P°l’*¢35l0n. and thus ('n\Irr>rl 1| li-nnIl1\' 'l‘nm (‘.micz-- movie
 
+Textline_Box[37]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[37]: x=89, y=1238, w=790, h=53, confidence=74, text= "5“'“l’°°'¢“|0ﬁ. and thus ensued a lcrigtl1\"lbrir Cruise movi
-nIrtlh:rr.'l1u.-vmni-A .... ...i:.- ..,.. rr . N ..( .. ,.  ,~__.;..,
 
+Textline_Box[38]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[38]: x=89, y=1243, w=803, h=89, confidence=77, text= "' ' v""rVW=3i|0n. and thus ensued a lcrigtl1\"lbrii Cruise m0Vl€
-. . Tl‘°l'”“l£€l an entire stack of his DVDs. Why Toni Cruise?
-l:inl»n.o....1»..., u . . I u I -.I. _......i,
 
+Textline_Box[39]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[39]: x=155, y=1279, w=737, h=62, confidence=72, text= wu. u uey rented an entire stack of his l‘)VDs. Why 'lbrn Cruise?
-'/h°P“ld0WrI his labtur) lnnu Pnnrlnlx In ...r.o.-ls ulmm with even’-
 
+Textline_Box[40]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[40]: x=89, y=1320, w=706, h=52, confidence=77, text= ~--up --I pumown his laptop long enough to watcli along Wl
-GIdI¢,¢lDllllu:"Tnm f‘...:,.... , r ' ‘ ' '
 
+Textline_Box[41]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[41]: x=209, y=1322, w=684, h=58, confidence=71, text= WI uuwn ms laptop long enough to watch along with every-
-Plilmi "Tom Cruisp um F...s.... L..,.,.....,. 1...', ....r n \/I‘r\.’ :-nol
 
+Textline_Box[42]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[42]: x=89, y=1345, w=790, h=67, confidence=69, text= cu , _ : _. ., .,..,,.. ._ .._.-.._.-..,, . .
-‘hr  “Tom Cruise was funny because he's not a very Col
-d"|@.|lc'1nnn.-....r ......~ ..
 
+Textline_Box[43]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[43]: x=131, y=1357, w=761, h=88, confidence=72, text= __ _ ‘ g _ . W (1-0Dl
-wt. “plum: tom Cruise was funny because he s not a V6 .
-at-.1. He’: not: cool guy." It was camp. _ . .
-Flﬂv mm. Al... .A ‘ '
 
+Textline_Box[44]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[44]: x=153, y=1413, w=421, h=50, confidence=66, text= my "' ' “"" 6")‘ n was camp.
-'°°" “WY were naminn it... ...n,...
 
+Textline_Box[45]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[45]: x=90, y=1444, w=656, h=49, confidence=75, text= Q‘! "W" Iwpy were naming the servers on which 'I'
-Wl|I'Iu'rrum.lo....r.___,. .  .. . .
 
+Textline_Box[46]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[46]: x=89, y=1440, w=804, h=93, confidence=77, text= """ "’"" '“*YWcre naming the servers on which 'l'liefacel)ook's
-"'|ftIraanu-mg . .. .  .-
-‘. , _ “Sifter characters in loin Cruise movies: Wheres
 
-'°"Ptmmiuur'ir.-..._;_., .. . . . . .....
+Textline_Box[47]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 
-Textline_Box[47]: x=199, y=1480, w=694, h=74, confidence=70, text= 4 ‘IA
-. U --where‘
-. . . w ' . ()\’lt.'§>
+Textline_Box[48]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-u runllmﬁ Iﬂer characters in loin L,rii1én¢ l” i, it instead on
-ruImmg' ?"lt's running on Maverick. Well. rll
 
+Textline_Box[49]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[48]: x=516, y=1522, w=377, h=35, confidence=80, text= am.-rick.’ ‘Well, rim it instead on
 
+Textline_Box[50]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Textline_Box[49]: x=516, y=1522, w=377, h=35, confidence=80, text= am.-rick.’ ‘Well, rim it instead on
 
+Textline_Box[51]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[0]: x=119, y=65, w=9, h=6, confidence=0, text= 
-Word_Box[1]: x=363, y=38, w=37, h=19, confidence=79, text= the
 
+Textline_Box[52]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[2]: x=410, y=29, w=110, h=25, confidence=83, text= facebook
 
+Textline_Box[53]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[3]: x=529, y=28, w=74, h=21, confidence=80, text= effect
 
+Textline_Box[54]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[4]: x=102, y=144, w=65, h=30, confidence=89, text= out 
 
+Textline_Box[55]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[5]: x=176, y=142, w=32, h=23, confidence=82, text= the
 
+Textline_Box[56]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[6]: x=217, y=137, w=51, h=33, confidence=64, text= Poor,
 
+Textline_Box[57]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[7]: x=277, y=133, w=38, h=26, confidence=85, text= and
 
+Textline_Box[58]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[8]: x=326, y=135, w=35, h=21, confidence=74, text= eat.
 
+Textline_Box[59]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[9]: x=373, y=125, w=109, h=27, confidence=76, text= raiicnuslr,
 
+Textline_Box[60]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[10]: x=494, y=128, w=17, h=18, confidence=84, text= at
 
+Textline_Box[61]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[11]: x=525, y=132, w=25, h=14, confidence=75, text= llll
 
+Textline_Box[62]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[12]: x=564, y=122, w=93, h=23, confidence=79, text= outdoor
 
+Textline_Box[63]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[13]: x=670, y=123, w=63, h=23, confidence=79, text= table.
 
+Textline_Box[64]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[14]: x=748, y=125, w=18, h=22, confidence=90, text= It
 
+Textline_Box[65]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[15]: x=775, y=126, w=12, h=23, confidence=0, text= 
-Word_Box[16]: x=102, y=183, w=56, h=26, confidence=80, text= lasted
 
+Textline_Box[66]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[17]: x=169, y=186, w=32, h=19, confidence=79, text= ton
 
+Textline_Box[67]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[18]: x=212, y=179, w=36, h=24, confidence=83, text= late
 
+Textline_Box[68]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[19]: x=259, y=180, w=19, h=20, confidence=86, text= at
 
+Textline_Box[69]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[20]: x=288, y=176, w=19, h=22, confidence=90, text= iii
 
+Textline_Box[70]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
-Word_Box[21]: x=320, y=173, w=26, h=23, confidence=92, text= hl.
 
-
-Word_Box[22]: x=359, y=170, w=33, h=23, confidence=80, text= the
-
-
-Word_Box[23]: x=405, y=169, w=31, h=22, confidence=87, text= nei
-
-
-Word_Box[24]: x=445, y=166, w=69, h=22, confidence=65, text= rlilmrs
-
-
-Word_Box[25]: x=528, y=172, w=40, h=14, confidence=79, text= \\'0l
-
-
-Word_Box[26]: x=622, y=173, w=18, h=7, confidence=82, text= n-
-
-
-Word_Box[27]: x=789, y=136, w=20, h=14, confidence=76, text= IL‘
-
-
-Word_Box[28]: x=822, y=130, w=58, h=27, confidence=90, text= lalkin
-
-
-Word_Box[29]: x=308, y=182, w=12, h=22, confidence=70, text= E
-
-
-Word_Box[30]: x=439, y=176, w=12, h=21, confidence=74, text= L‘.
-
-
-Word_Box[31]: x=571, y=163, w=28, h=23, confidence=83, text= ll(l
-
-
-Word_Box[32]: x=614, y=167, w=33, h=26, confidence=63, text= §£‘l
-
-
-Word_Box[33]: x=663, y=165, w=82, h=29, confidence=76, text= peered
-
-
-Word_Box[34]: x=769, y=167, w=17, h=22, confidence=77, text= ll
-
-
-Word_Box[35]: x=882, y=144, w=11, h=22, confidence=71, text= E
-
-
-Word_Box[36]: x=101, y=223, w=94, h=31, confidence=84, text= brought a
-
-
-Word_Box[37]: x=202, y=218, w=32, h=33, confidence=63, text= girl
-
-
-Word_Box[38]: x=241, y=215, w=73, h=26, confidence=84, text= back to
-
-
-Word_Box[39]: x=321, y=213, w=28, h=23, confidence=72, text= his
-
-
-Word_Box[40]: x=357, y=218, w=62, h=16, confidence=72, text= TOOIU.
-
-
-Word_Box[41]: x=427, y=208, w=30, h=22, confidence=86, text= his
-
-
-Word_Box[42]: x=466, y=208, w=118, h=21, confidence=78, text= rooiiiinate
-
-
-Word_Box[43]: x=594, y=204, w=41, h=23, confidence=75, text= hail
-
-
-Word_Box[44]: x=646, y=208, w=20, h=19, confidence=78, text= lo
-
-
-Word_Box[45]: x=674, y=204, w=60, h=32, confidence=78, text= sleep
-
-
-Word_Box[46]: x=742, y=185, w=22, h=44, confidence=81, text= d(
-
-
-Word_Box[47]: x=787, y=177, w=105, h=44, confidence=61, text= SUIUCOHC
-,,. 4.:
-
-
-Word_Box[48]: x=100, y=246, w=518, h=42, confidence=81, text= ——~ 'v ..
-thecaucli or drag his mattress in to anotlier room
-
-
-Word_Box[49]: x=637, y=247, w=65, h=22, confidence=66, text= Sonic
-
-
-Word_Box[50]: x=719, y=256, w=7, h=13, confidence=91, text= )
-
-
-Word_Box[51]: x=764, y=213, w=127, h=58, confidence=68, text= iwnslairs on
-)lC'——l’l"II’1£‘|ll'
-
-
-Word_Box[52]: x=623, y=263, w=17, h=5, confidence=0, text= 
-Word_Box[53]: x=700, y=256, w=4, h=5, confidence=0, text= 
-Word_Box[54]: x=728, y=256, w=11, h=14, confidence=84, text= C
-
-
-Word_Box[55]: x=99, y=303, w=37, h=24, confidence=85, text= and
-
-
-Word_Box[56]: x=143, y=295, w=153, h=33, confidence=70, text= male-—stopped
-
-
-Word_Box[57]: x=305, y=293, w=59, h=31, confidence=80, text= by for
-
-
-Word_Box[58]: x=371, y=291, w=45, h=29, confidence=77, text= days
-
-
-Word_Box[59]: x=424, y=289, w=40, h=23, confidence=84, text= and
-
-
-Word_Box[60]: x=476, y=290, w=36, h=26, confidence=81, text= inst
-
-
-Word_Box[61]: x=524, y=287, w=60, h=30, confidence=87, text= hung
-
-
-Word_Box[62]: x=593, y=287, w=91, h=23, confidence=81, text= around.
-
-
-Word_Box[63]: x=713, y=256, w=5, h=21, confidence=90, text= I
-
-
-Word_Box[64]: x=742, y=256, w=28, h=22, confidence=74, text= Op
-
-
-Word_Box[65]: x=780, y=258, w=11, h=14, confidence=74, text= L‘
-
-
-Word_Box[66]: x=822, y=251, w=70, h=28, confidence=83, text= female
-
-
-Word_Box[67]: x=139, y=343, w=45, h=22, confidence=84, text= One
-
-
-Word_Box[68]: x=192, y=338, w=81, h=25, confidence=76, text= of them
-
-
-Word_Box[69]: x=283, y=343, w=36, h=16, confidence=74, text= \\3.\
-
-
-Word_Box[70]: x=329, y=342, w=9, h=15, confidence=74, text= H
-
-
-Word_Box[71]: x=349, y=331, w=63, h=25, confidence=69, text= Friend
-
-
-Word_Box[72]: x=424, y=330, w=23, h=23, confidence=63, text= of
-
-
-Word_Box[73]: x=456, y=329, w=87, h=23, confidence=78, text= Pa rkc r '5
-
-
-Word_Box[74]: x=555, y=328, w=81, h=23, confidence=78, text= nnmcd
-
-
-Word_Box[75]: x=652, y=329, w=18, h=22, confidence=75, text= '\:
-
-
-Word_Box[76]: x=742, y=331, w=11, h=4, confidence=0, text= 
-Word_Box[77]: x=97, y=382, w=65, h=24, confidence=81, text= earlier
-
-
-Word_Box[78]: x=173, y=379, w=31, h=24, confidence=81, text= hcl
-
-
-Word_Box[79]: x=231, y=377, w=11, h=24, confidence=86, text= d
-
-
-Word_Box[80]: x=254, y=379, w=62, h=21, confidence=70, text= create
-
-
-Word_Box[81]: x=329, y=383, w=9, h=14, confidence=0, text= 
-Word_Box[82]: x=667, y=337, w=53, h=15, confidence=66, text= ZITOH
-
-
-Word_Box[83]: x=733, y=330, w=66, h=31, confidence=70, text= snug.
-
-
-Word_Box[84]: x=813, y=333, w=31, h=23, confidence=82, text= |IL'
-
-
-Word_Box[85]: x=855, y=334, w=24, h=25, confidence=79, text= lm
-
-
-Word_Box[86]: x=205, y=387, w=25, h=23, confidence=64, text= De
-
-
-Word_Box[87]: x=352, y=381, w=77, h=15, confidence=78, text= \'Cl'SIOl1
-
-
-Word_Box[88]: x=443, y=370, w=24, h=24, confidence=77, text= of
-
-
-Word_Box[89]: x=478, y=371, w=91, h=29, confidence=77, text= Napster
-
-
-Word_Box[90]: x=584, y=370, w=31, h=22, confidence=79, text= for
-
-
-Word_Box[91]: x=630, y=369, w=36, h=23, confidence=69, text= lhe
-
-
-Word_Box[92]: x=682, y=371, w=38, h=22, confidence=73, text= .\1;1
-
-
-Word_Box[93]: x=731, y=372, w=10, h=12, confidence=0, text= 
-Word_Box[94]: x=97, y=423, w=86, h=24, confidence=75, text= Macstcr,
-
-
-Word_Box[95]: x=191, y=417, w=63, h=25, confidence=62, text= which
-
-
-Word_Box[96]: x=264, y=417, w=81, h=30, confidence=74, text= Napster
-
-
-Word_Box[97]: x=354, y=413, w=83, h=31, confidence=81, text= bought.
-
-
-Word_Box[98]: x=448, y=413, w=23, h=22, confidence=74, text= Al
-
-
-Word_Box[99]: x=483, y=411, w=39, h=23, confidence=67, text= this
-
-
-Word_Box[100]: x=533, y=412, w=61, h=29, confidence=81, text= point
-
-
-Word_Box[101]: x=606, y=410, w=27, h=24, confidence=70, text= he
-
-
-Word_Box[102]: x=644, y=420, w=14, h=13, confidence=91, text= \\
-
-
-Word_Box[103]: x=669, y=420, w=6, h=14, confidence=88, text= I
-
-
-Word_Box[104]: x=710, y=387, w=5, h=6, confidence=0, text= 
-Word_Box[105]: x=723, y=372, w=92, h=26, confidence=78, text= cintosh,
-
-
-Word_Box[106]: x=829, y=374, w=62, h=26, confidence=71, text= cz1Hc(|
-
-
-Word_Box[107]: x=660, y=420, w=10, h=14, confidence=70, text= 'z
-
-
-Word_Box[108]: x=678, y=420, w=8, h=14, confidence=73, text= S
-
-
-Word_Box[109]: x=749, y=414, w=11, h=10, confidence=0, text= 
-Word_Box[110]: x=96, y=456, w=212, h=30, confidence=74, text= scent music-oriented
-
-
-Word_Box[111]: x=315, y=454, w=58, h=25, confidence=79, text= social
-
-
-Word_Box[112]: x=383, y=453, w=90, h=24, confidence=69, text= network
-
-
-Word_Box[113]: x=481, y=452, w=69, h=24, confidence=70, text= called
-
-
-Word_Box[114]: x=562, y=453, w=59, h=22, confidence=74, text= hncc
-
-
-Word_Box[115]: x=663, y=452, w=4, h=23, confidence=0, text= 
-Word_Box[116]: x=697, y=412, w=96, h=32, confidence=78, text= working
-
-
-Word_Box[117]: x=802, y=413, w=31, h=24, confidence=73, text= for
-
-
-Word_Box[118]: x=842, y=424, w=9, h=14, confidence=66, text= (I
-
-
-Word_Box[119]: x=862, y=425, w=31, h=15, confidence=70, text= H21-
-
-
-Word_Box[120]: x=94, y=510, w=49, h=21, confidence=69, text= away
-
-
-Word_Box[121]: x=151, y=502, w=18, h=22, confidence=88, text= in
-
-
-Word_Box[122]: x=180, y=499, w=42, h=24, confidence=81, text= Palo
-
-
-Word_Box[123]: x=230, y=498, w=48, h=24, confidence=71, text= Alto.
-
-
-Word_Box[124]: x=289, y=498, w=56, h=29, confidence=76, text= Siﬂig
-
-
-Word_Box[125]: x=355, y=498, w=14, h=21, confidence=63, text= is
-
-
-Word_Box[126]: x=379, y=504, w=10, h=14, confidence=81, text= il
-
-
-Word_Box[127]: x=400, y=496, w=62, h=30, confidence=74, text= quiet,
-
-
-Word_Box[128]: x=473, y=493, w=126, h=24, confidence=66, text= self-effac'iI1
-
-
-Word_Box[129]: x=624, y=461, w=30, h=55, confidence=81, text= m.
-M
-
-
-Word_Box[130]: x=671, y=453, w=78, h=64, confidence=77, text= ncatccl
-nd sur
-
-
-Word_Box[131]: x=759, y=462, w=10, h=15, confidence=67, text= ll
-
-
-Word_Box[132]: x=779, y=454, w=39, h=24, confidence=71, text= few
-
-
-Word_Box[133]: x=826, y=455, w=66, h=26, confidence=68, text= blocks
-
-
-Word_Box[134]: x=94, y=551, w=18, h=14, confidence=84, text= In
-
-
-Word_Box[135]: x=120, y=540, w=83, h=24, confidence=78, text= addition
-
-
-Word_Box[136]: x=211, y=544, w=20, h=19, confidence=70, text= to
-
-
-Word_Box[137]: x=238, y=539, w=59, h=30, confidence=80, text= being
-
-
-Word_Box[138]: x=305, y=546, w=10, h=15, confidence=68, text= 3
-
-
-Word_Box[139]: x=324, y=545, w=140, h=23, confidence=72, text= programmer
-
-
-Word_Box[140]: x=475, y=538, w=14, h=20, confidence=87, text= is
-
-
-Word_Box[141]: x=499, y=544, w=10, h=14, confidence=0, text= 
-Word_Box[142]: x=519, y=503, w=117, h=63, confidence=73, text= L’m]Cll1g, \
-superb gr:
-
-
-Word_Box[143]: x=658, y=503, w=40, h=55, confidence=74, text= on(
-uhic
-
-
-Word_Box[144]: x=715, y=495, w=67, h=46, confidence=75, text= surfer
-
-
-Word_Box[145]: x=793, y=500, w=45, h=27, confidence=63, text= mm
-
-
-Word_Box[146]: x=849, y=498, w=43, h=24, confidence=81, text= who
-
-
-Word_Box[147]: x=92, y=580, w=107, h=32, confidence=66, text= P08!‘-ipher.
-
-
-Word_Box[148]: x=210, y=580, w=36, h=23, confidence=79, text= But
-
-
-Word_Box[149]: x=254, y=578, w=48, h=25, confidence=73, text= back
-
-
-Word_Box[150]: x=311, y=578, w=47, h=24, confidence=67, text= than
-
-
-Word_Box[151]: x=369, y=578, w=26, h=23, confidence=81, text= he
-
-
-Word_Box[152]: x=404, y=586, w=39, h=14, confidence=68, text= \H1S
-
-
-Word_Box[153]: x=453, y=577, w=80, h=30, confidence=77, text= feeling
-
-
-Word_Box[154]: x=543, y=544, w=118, h=56, confidence=75, text= pen) grap
-|Jurncd—o1
-
-
-Word_Box[155]: x=670, y=545, w=30, h=14, confidence=76, text= HC
-
-
-Word_Box[156]: x=711, y=536, w=100, h=32, confidence=78, text= designer
-
-
-Word_Box[157]: x=820, y=538, w=40, h=24, confidence=80, text= and
-
-
-Word_Box[158]: x=870, y=543, w=23, h=27, confidence=20, text= [-(V.
-
-
-Word_Box[159]: x=609, y=586, w=29, h=14, confidence=72, text= ‘(l-
-
-
-Word_Box[160]: x=688, y=587, w=5, h=13, confidence=71, text= ..
-
-
-Word_Box[161]: x=92, y=621, w=63, h=23, confidence=70, text= Parker
-
-
-Word_Box[162]: x=161, y=619, w=130, h=32, confidence=83, text= brought him
-
-
-Word_Box[163]: x=298, y=619, w=77, h=24, confidence=85, text= around
-
-
-Word_Box[164]: x=384, y=619, w=90, h=23, confidence=74, text= because
-
-
-Word_Box[165]: x=483, y=618, w=26, h=24, confidence=75, text= he
-
-
-Word_Box[166]: x=518, y=618, w=53, h=23, confidence=80, text= thou
-
-
-Word_Box[167]: x=589, y=618, w=4, h=23, confidence=0, text= 
-Word_Box[168]: x=606, y=618, w=19, h=23, confidence=82, text= I I
-
-
-Word_Box[169]: x=639, y=581, w=38, h=19, confidence=81, text= out
-
-
-Word_Box[170]: x=694, y=577, w=37, h=24, confidence=82, text= ll1(i
-
-
-Word_Box[171]: x=743, y=580, w=148, h=24, confidence=71, text= iinrnotivaicti.
-
-
-Word_Box[172]: x=91, y=661, w=54, h=27, confidence=74, text= book.
-
-
-Word_Box[173]: x=152, y=660, w=101, h=31, confidence=77, text= especially
-
-
-Word_Box[174]: x=260, y=660, w=45, h=24, confidence=74, text= with
-
-
-Word_Box[175]: x=314, y=660, w=70, h=31, confidence=81, text= design
-
-
-Word_Box[176]: x=574, y=627, w=13, h=22, confidence=65, text= E
-
-
-Word_Box[177]: x=597, y=628, w=5, h=13, confidence=88, text= l
-
-
-Word_Box[178]: x=627, y=628, w=22, h=14, confidence=77, text= 1C
-
-
-Word_Box[179]: x=658, y=619, w=67, h=23, confidence=77, text= could
-
-
-Word_Box[180]: x=736, y=619, w=51, h=31, confidence=85, text= help
-
-
-Word_Box[181]: x=794, y=620, w=99, h=24, confidence=71, text= 'l 'l1cﬁice-
-
-
-Word_Box[182]: x=131, y=702, w=36, h=22, confidence=80, text= Bui
-
-
-Word_Box[183]: x=177, y=701, w=55, h=31, confidence=75, text= Siitig
-
-
-Word_Box[184]: x=242, y=702, w=66, h=22, confidence=63, text= wasrft
-
-
-Word_Box[185]: x=318, y=701, w=37, h=23, confidence=82, text= sho
-
-
-Word_Box[186]: x=376, y=680, w=14, h=26, confidence=0, text= 
-Word_Box[187]: x=356, y=710, w=53, h=22, confidence=75, text= wing
-
-
-Word_Box[188]: x=421, y=710, w=10, h=14, confidence=66, text= ll
-
-
-Word_Box[189]: x=445, y=701, w=29, h=23, confidence=78, text= lot
-
-
-Word_Box[190]: x=501, y=701, w=23, h=23, confidence=85, text= f i
-
-
-Word_Box[191]: x=592, y=703, w=18, h=11, confidence=0, text= 
-Word_Box[192]: x=645, y=703, w=9, h=6, confidence=0, text= 
-Word_Box[193]: x=90, y=741, w=53, h=23, confidence=69, text= Mark
-
-
-Word_Box[194]: x=153, y=741, w=39, h=24, confidence=76, text= that
-
-
-Word_Box[195]: x=200, y=742, w=63, h=23, confidence=76, text= Aaron
-
-
-Word_Box[196]: x=273, y=750, w=38, h=15, confidence=76, text= W2.\
-
-
-Word_Box[197]: x=321, y=742, w=105, h=27, confidence=43, text= brilliant."
-
-
-Word_Box[198]: x=438, y=706, w=191, h=61, confidence=78, text= lot oi rnmahvc.
-savs Parker. “Bu
-
-
-Word_Box[199]: x=658, y=703, w=5, h=22, confidence=79, text= U
-
-
-Word_Box[200]: x=678, y=702, w=51, h=31, confidence=58, text= la.-pi
-
-
-Word_Box[201]: x=742, y=702, w=121, h=32, confidence=72, text= explaining
-
-
-Word_Box[202]: x=874, y=707, w=18, h=19, confidence=78, text= lo
-
-
-Word_Box[203]: x=88, y=781, w=66, h=63, confidence=81, text= on the
-fonts.
-
-
-Word_Box[204]: x=162, y=782, w=64, h=23, confidence=78, text= conch
-
-
-Word_Box[205]: x=235, y=782, w=39, h=24, confidence=86, text= and
-
-
-Word_Box[206]: x=283, y=782, w=68, h=24, confidence=76, text= diddlc
-
-
-Word_Box[207]: x=361, y=784, w=79, h=23, confidence=85, text= around
-
-
-Word_Box[208]: x=451, y=771, w=28, h=36, confidence=93, text= on
-
-
-Word_Box[209]: x=491, y=784, w=31, h=24, confidence=82, text= his
-
-
-Word_Box[210]: x=533, y=763, w=39, h=45, confidence=67, text= C01"
-
-
-Word_Box[211]: x=617, y=748, w=24, h=19, confidence=92, text= ul
-
-
-Word_Box[212]: x=651, y=745, w=73, h=22, confidence=71, text= Aaron
-
-
-Word_Box[213]: x=737, y=744, w=72, h=23, confidence=74, text= would
-
-
-Word_Box[214]: x=823, y=746, w=38, h=27, confidence=73, text= just
-
-
-Word_Box[215]: x=871, y=746, w=22, h=21, confidence=87, text= sit
-
-
-Word_Box[216]: x=563, y=794, w=4, h=14, confidence=97, text= l
-
-
-Word_Box[217]: x=633, y=794, w=7, h=6, confidence=0, text= 
-Word_Box[218]: x=108, y=826, w=33, h=18, confidence=67, text= nts.
-
-
-Word_Box[219]: x=154, y=822, w=54, h=24, confidence=74, text= Mark
-
-
-Word_Box[220]: x=219, y=822, w=44, h=32, confidence=74, text= kept
-
-
-Word_Box[221]: x=273, y=826, w=67, h=30, confidence=62, text= saying
-
-
-Word_Box[222]: x=352, y=825, w=60, h=23, confidence=66, text= '\Vho
-
-
-Word_Box[223]: x=426, y=827, w=14, h=22, confidence=84, text= is
-
-
-Word_Box[224]: x=453, y=826, w=39, h=23, confidence=78, text= this
-
-
-Word_Box[225]: x=549, y=829, w=9, h=15, confidence=75, text= ?
-
-
-Word_Box[226]: x=570, y=789, w=81, h=44, confidence=81, text= nputer
-
-
-Word_Box[227]: x=661, y=785, w=28, h=23, confidence=68, text= ;1ll
-
-
-Word_Box[228]: x=701, y=785, w=40, h=31, confidence=72, text= (lay
-
-
-Word_Box[229]: x=752, y=785, w=85, h=32, confidence=59, text= pleiving
-
-
-Word_Box[230]: x=847, y=785, w=44, h=23, confidence=87, text= with
-
-
-Word_Box[231]: x=88, y=861, w=25, h=23, confidence=83, text= dn
-
-
-Word_Box[232]: x=121, y=862, w=101, h=32, confidence=64, text= any‘thing.'
-
-
-Word_Box[233]: x=232, y=864, w=56, h=24, confidence=81, text= Marl:
-
-
-Word_Box[234]: x=298, y=864, w=49, h=25, confidence=90, text= thou
-
-
-Word_Box[235]: x=363, y=866, w=4, h=23, confidence=71, text= ﬂ
-
-
-Word_Box[236]: x=378, y=870, w=6, h=19, confidence=91, text= t
-
-
-Word_Box[237]: x=478, y=835, w=15, h=14, confidence=85, text= IS
-
-
-Word_Box[238]: x=505, y=835, w=48, h=23, confidence=72, text= guy:
-
-
-Word_Box[239]: x=572, y=828, w=50, h=22, confidence=67, text= llc'.s
-
-
-Word_Box[240]: x=636, y=827, w=118, h=23, confidence=73, text= wortliless.
-
-
-Word_Box[241]: x=769, y=828, w=33, h=22, confidence=54, text= l’lc
-
-
-Word_Box[242]: x=815, y=827, w=78, h=23, confidence=67, text= doesn't
-
-
-Word_Box[243]: x=88, y=900, w=83, h=33, confidence=63, text= hanginﬁ
-
-
-Word_Box[244]: x=179, y=904, w=75, h=24, confidence=82, text= around
-
-
-Word_Box[245]: x=263, y=875, w=119, h=63, confidence=77, text= ITK Iﬂollglll
-seeming to
-
-
-Word_Box[246]: x=392, y=871, w=66, h=60, confidence=86, text= it was
-do no
-
-
-Word_Box[247]: x=470, y=867, w=40, h=47, confidence=81, text= had
-
-
-Word_Box[248]: x=522, y=868, w=31, h=48, confidence=74, text= for
-
-
-Word_Box[249]: x=565, y=868, w=36, h=24, confidence=67, text= the
-
-
-Word_Box[250]: x=613, y=868, w=58, h=24, confidence=81, text= work
-
-
-Word_Box[251]: x=683, y=868, w=59, h=24, confidence=75, text= ethic
-
-
-Word_Box[252]: x=754, y=873, w=21, h=19, confidence=87, text= to
-
-
-Word_Box[253]: x=786, y=868, w=53, h=24, confidence=68, text= have
-
-
-Word_Box[254]: x=850, y=868, w=41, h=23, confidence=90, text= liini
-
-
-Word_Box[255]: x=87, y=941, w=94, h=33, confidence=75, text= enrolling
-
-
-Word_Box[256]: x=191, y=948, w=18, h=19, confidence=81, text= at
-
-
-Word_Box[257]: x=218, y=944, w=33, h=25, confidence=77, text= the
-
-
-Word_Box[258]: x=263, y=946, w=109, h=26, confidence=77, text= Univcrsitv
-
-
-Word_Box[259]: x=398, y=949, w=9, h=23, confidence=80, text= f
-
-
-Word_Box[260]: x=424, y=909, w=102, h=48, confidence=65, text= nothing.
-\ I<f .
-
-
-Word_Box[261]: x=549, y=915, w=4, h=21, confidence=81, text= l
-
-
-Word_Box[262]: x=565, y=910, w=42, h=24, confidence=80, text= l'hc
-
-
-Word_Box[263]: x=618, y=910, w=114, h=31, confidence=70, text= following
-
-
-Word_Box[264]: x=742, y=919, w=49, h=22, confidence=44, text= ye-‘Hr
-
-
-Word_Box[265]: x=808, y=909, w=49, h=24, confidence=79, text= aitcr
-
-
-Word_Box[266]: x=867, y=917, w=26, h=15, confidence=75, text= [C-
-
-
-Word_Box[267]: x=88, y=982, w=52, h=30, confidence=71, text= study
-
-
-Word_Box[268]: x=148, y=983, w=115, h=33, confidence=83, text= philosophy
-
-
-Word_Box[269]: x=277, y=987, w=43, h=24, confidence=75, text= Sitti
-
-
-Word_Box[270]: x=342, y=958, w=53, h=54, confidence=82, text= siry 0
-did c
-
-
-Word_Box[271]: x=415, y=950, w=117, h=24, confidence=74, text= California
-
-
-Word_Box[272]: x=545, y=956, w=20, h=19, confidence=84, text= at
-
-
-Word_Box[273]: x=579, y=952, w=104, h=24, confidence=72, text= BCl’l(Clt.‘\'
-
-
-Word_Box[274]: x=696, y=952, w=32, h=23, confidence=73, text= for
-
-
-Word_Box[275]: x=740, y=961, w=10, h=14, confidence=92, text= .l
-
-
-Word_Box[276]: x=763, y=955, w=100, h=20, confidence=75, text= semester
-
-
-Word_Box[277]: x=874, y=954, w=18, h=19, confidence=85, text= to
-
-
-Word_Box[278]: x=87, y=1029, w=38, h=16, confidence=78, text= OHC
-
-
-Word_Box[279]: x=132, y=1022, w=21, h=24, confidence=77, text= of
-
-
-Word_Box[280]: x=158, y=1024, w=136, h=35, confidence=56, text= Zucltcrbergk
-
-
-Word_Box[281]: x=302, y=997, w=41, h=56, confidence=78, text= mg i
-Clos
-
-
-Word_Box[282]: x=356, y=998, w=17, h=56, confidence=77, text= in
-st
-
-
-Word_Box[283]: x=385, y=999, w=62, h=56, confidence=81, text= come
-:onﬁ(
-
-
-Word_Box[284]: x=458, y=996, w=20, h=18, confidence=76, text= tn
-
-
-Word_Box[285]: x=488, y=992, w=56, h=24, confidence=79, text= work
-
-
-Word_Box[286]: x=554, y=998, w=20, h=18, confidence=85, text= at
-
-
-Word_Box[287]: x=583, y=993, w=167, h=24, confidence=69, text= 'l'licfz1ccl)ook.
-
-
-Word_Box[288]: x=763, y=994, w=33, h=22, confidence=77, text= llc
-
-
-Word_Box[289]: x=806, y=992, w=86, h=24, confidence=74, text= became
-
-
-Word_Box[290]: x=128, y=1063, w=118, h=27, confidence=80, text= Oftcntimcs
-
-
-Word_Box[291]: x=258, y=1067, w=20, h=24, confidence=79, text= tl'i
-
-
-Word_Box[292]: x=345, y=1039, w=20, h=14, confidence=66, text= Ch
-
-
-Word_Box[293]: x=382, y=1040, w=40, h=15, confidence=80, text= C()ll
-
-
-Word_Box[294]: x=441, y=1033, w=76, h=26, confidence=76, text= (lants,)
-
-
-Word_Box[295]: x=280, y=1078, w=11, h=14, confidence=78, text= C
-
-
-Word_Box[296]: x=304, y=1070, w=80, h=33, confidence=82, text= coding,
-
-
-Word_Box[297]: x=399, y=1074, w=65, h=23, confidence=87, text= sword
-
-
-Word_Box[298]: x=472, y=1075, w=28, h=23, confidence=84, text= )la
-
-
-Word_Box[299]: x=87, y=1104, w=111, h=68, confidence=77, text= go on well
-ing.movio
-
-
-Word_Box[300]: x=209, y=1111, w=40, h=20, confidence=87, text= uito
-
-
-Word_Box[301]: x=259, y=1108, w=33, h=25, confidence=79, text= the
-
-
-Word_Box[302]: x=303, y=1111, w=62, h=31, confidence=81, text= night,
-
-
-Word_Box[303]: x=377, y=1084, w=142, h=55, confidence=74, text= ,, swurupiay,
-sometimes I‘
-
-
-Word_Box[304]: x=534, y=1076, w=42, h=24, confidence=86, text= and
-
-
-Word_Box[305]: x=594, y=1086, w=94, h=14, confidence=67, text= l‘.'.lll(.‘()ll.\
-
-
-Word_Box[306]: x=704, y=1078, w=107, h=29, confidence=76, text= meetings
-
-
-Word_Box[307]: x=825, y=1072, w=66, h=25, confidence=82, text= would
-
-
-Word_Box[308]: x=483, y=1126, w=6, h=5, confidence=0, text= 
-Word_Box[309]: x=517, y=1126, w=7, h=14, confidence=94, text= )
-
-
-Word_Box[310]: x=627, y=1128, w=5, h=5, confidence=0, text= 
-Word_Box[311]: x=89, y=1181, w=43, h=24, confidence=78, text= with
-
-
-Word_Box[312]: x=143, y=1148, w=210, h=59, confidence=70, text= novic-watching, and
-the amp Hal’. ». -
-
-
-Word_Box[313]: x=361, y=1154, w=131, h=33, confidence=82, text= video-game
-
-
-Word_Box[314]: x=502, y=1118, w=145, h=70, confidence=69, text= punctuated
-playiiig. 'l'hL
-
-
-Word_Box[315]: x=660, y=1118, w=27, h=31, confidence=72, text= hy
-
-
-Word_Box[316]: x=699, y=1118, w=75, h=23, confidence=74, text= breaks
-
-
-Word_Box[317]: x=786, y=1117, w=31, h=23, confidence=77, text= for
-
-
-Word_Box[318]: x=828, y=1113, w=65, h=26, confidence=82, text= drink-
-
-
-Word_Box[319]: x=186, y=1193, w=56, h=23, confidence=61, text= ‘Fm:
-
-
-Word_Box[320]: x=254, y=1189, w=17, h=24, confidence=90, text= ll
-
-
-Word_Box[321]: x=286, y=1190, w=4, h=24, confidence=81, text= l
-
-
-Word_Box[322]: x=508, y=1167, w=85, h=23, confidence=70, text= )i2iyI|‘g-
-
-
-Word_Box[323]: x=603, y=1160, w=49, h=23, confidence=67, text= 'l'|ic
-
-
-Word_Box[324]: x=661, y=1160, w=61, h=23, confidence=74, text= Xlmx
-
-
-Word_Box[325]: x=761, y=1163, w=20, h=19, confidence=66, text= ta
-
-
-Word_Box[326]: x=845, y=1165, w=4, h=4, confidence=0, text= 
-Word_Box[327]: x=88, y=1228, w=73, h=18, confidence=76, text= Clmt I
-
-
-Word_Box[328]: x=169, y=1232, w=46, h=23, confidence=69, text= Emu
-
-
-Word_Box[329]: x=249, y=1229, w=13, h=24, confidence=79, text= l)
-
-
-Word_Box[330]: x=273, y=1199, w=11, h=15, confidence=74, text= 3
-
-
-Word_Box[331]: x=293, y=1200, w=14, h=38, confidence=89, text= 0
-
-
-Word_Box[332]: x=317, y=1201, w=9, h=14, confidence=0, text= 
-Word_Box[333]: x=340, y=1196, w=109, h=28, confidence=78, text= particular
-
-
-Word_Box[334]: x=462, y=1198, w=91, h=25, confidence=71, text= iavoritc.
-
-
-Word_Box[335]: x=569, y=1202, w=53, h=22, confidence=72, text= Soni
-
-
-Word_Box[336]: x=633, y=1201, w=11, h=23, confidence=89, text= -i
-
-
-Word_Box[337]: x=702, y=1168, w=57, h=40, confidence=77, text= )X g0
-
-
-Word_Box[338]: x=780, y=1156, w=112, h=52, confidence=80, text= i worlmiit.
-V ‘ . L ..
-
-
-Word_Box[339]: x=217, y=1236, w=32, h=22, confidence=63, text= Po
-
-
-Word_Box[340]: x=263, y=1239, w=73, h=18, confidence=73, text= SCSSIOII
-
-
-Word_Box[341]: x=352, y=1236, w=41, h=24, confidence=83, text= and
-
-
-Word_Box[342]: x=403, y=1237, w=12, h=23, confidence=89, text= tl
-
-
-Word_Box[343]: x=625, y=1211, w=11, h=14, confidence=55, text= L.
-
-
-Word_Box[344]: x=647, y=1210, w=42, h=14, confidence=80, text= l()\'\’
-
-
-Word_Box[345]: x=710, y=1202, w=47, h=22, confidence=75, text= lhin
-
-
-Word_Box[346]: x=772, y=1200, w=77, h=23, confidence=74, text= Criiisc
-
-
-Word_Box[347]: x=862, y=1196, w=31, h=23, confidence=78, text= he-
-
-
-Word_Box[348]: x=89, y=1262, w=98, h=26, confidence=78, text= rriarathon
-
-
-Word_Box[349]: x=200, y=1267, w=32, h=24, confidence=70, text= 'lli
-
-
-Word_Box[350]: x=340, y=1253, w=4, h=7, confidence=0, text= 
-Word_Box[351]: x=417, y=1247, w=33, h=14, confidence=64, text= Ills
-
-
-Word_Box[352]: x=460, y=1241, w=81, h=23, confidence=75, text= eiisiicd
-
-
-Word_Box[353]: x=553, y=1251, w=9, h=14, confidence=0, text= 
-Word_Box[354]: x=574, y=1242, w=35, h=24, confidence=81, text= lcn
-
-
-Word_Box[355]: x=627, y=1243, w=12, h=23, confidence=86, text= ll
-
-
-Word_Box[356]: x=661, y=1244, w=13, h=11, confidence=0, text= 
-Word_Box[357]: x=752, y=1243, w=6, h=6, confidence=0, text= 
-Word_Box[358]: x=89, y=1299, w=59, h=33, confidence=59, text= SME-
-
-
-Word_Box[359]: x=173, y=1284, w=26, h=44, confidence=57, text= ii;
-
-
-Word_Box[360]: x=233, y=1274, w=97, h=25, confidence=72, text= cy rented
-
-
-Word_Box[361]: x=339, y=1280, w=100, h=22, confidence=72, text= an entire
-
-
-Word_Box[362]: x=448, y=1281, w=56, h=23, confidence=77, text= stack
-
-
-Word_Box[363]: x=552, y=1259, w=12, h=28, confidence=0, text= 
-Word_Box[364]: x=612, y=1252, w=13, h=22, confidence=66, text= S
-
-
-Word_Box[365]: x=641, y=1252, w=18, h=21, confidence=64, text= 1.‘
-
-
-Word_Box[366]: x=678, y=1244, w=49, h=22, confidence=70, text= lhni
-
-
-Word_Box[367]: x=738, y=1243, w=78, h=22, confidence=71, text= Cruise
-
-
-Word_Box[368]: x=827, y=1244, w=65, h=18, confidence=66, text= ll1()\‘lL'
-
-
-Word_Box[369]: x=155, y=1312, w=17, h=14, confidence=65, text= W
-
-
-Word_Box[370]: x=205, y=1310, w=98, h=27, confidence=87, text= put down
-
-
-Word_Box[371]: x=312, y=1313, w=56, h=27, confidence=81, text= his la
-
-
-Word_Box[372]: x=385, y=1322, w=5, h=19, confidence=91, text= t
-
-
-Word_Box[373]: x=480, y=1290, w=8, h=14, confidence=74, text= L
-
-
-Word_Box[374]: x=513, y=1282, w=155, h=25, confidence=72, text= uiliis DVDs.
-
-
-Word_Box[375]: x=679, y=1279, w=213, h=35, confidence=70, text= Wliy'l'0in(Ir1iisc?
-
-
-Word_Box[376]: x=89, y=1342, w=119, h=28, confidence=74, text= one else. ex
-
-
-Word_Box[377]: x=222, y=1347, w=24, h=25, confidence=0, text= 
-Word_Box[378]: x=285, y=1354, w=14, h=7, confidence=0, text= 
-Word_Box[379]: x=370, y=1326, w=13, h=21, confidence=70, text= I)
-
-
-Word_Box[380]: x=393, y=1328, w=27, h=21, confidence=82, text= op
-
-
-Word_Box[381]: x=428, y=1320, w=51, h=32, confidence=74, text= long
-
-
-Word_Box[382]: x=487, y=1332, w=57, h=14, confidence=70, text= Clltlll
-
-
-Word_Box[383]: x=554, y=1324, w=37, h=24, confidence=80, text= zli t
-
-
-Word_Box[384]: x=632, y=1335, w=7, h=4, confidence=0, text= 
-Word_Box[385]: x=209, y=1356, w=13, h=22, confidence=90, text= P
-
-
-Word_Box[386]: x=241, y=1358, w=35, h=17, confidence=58, text= H132
-
-
-Word_Box[387]: x=301, y=1354, w=44, h=25, confidence=83, text= lbin
-
-
-Word_Box[388]: x=354, y=1358, w=19, h=22, confidence=85, text= C
-
-
-Word_Box[389]: x=423, y=1370, w=6, h=6, confidence=0, text= 
-Word_Box[390]: x=548, y=1333, w=12, h=22, confidence=64, text= Q
-
-
-Word_Box[391]: x=594, y=1334, w=12, h=14, confidence=79, text= ll
-
-
-Word_Box[392]: x=616, y=1325, w=69, h=24, confidence=75, text= wiitcli
-
-
-Word_Box[393]: x=696, y=1325, w=66, h=30, confidence=74, text= along
-
-
-Word_Box[394]: x=771, y=1322, w=49, h=24, confidence=90, text= willi
-
-
-Word_Box[395]: x=830, y=1326, w=63, h=18, confidence=62, text= C‘/Cr‘/.
-
-
-Word_Box[396]: x=89, y=1378, w=100, h=30, confidence=70, text= chmdcr.
-
-
-Word_Box[397]: x=198, y=1387, w=36, h=25, confidence=84, text= Hc'
-
-
-Word_Box[398]: x=376, y=1367, w=51, h=16, confidence=73, text= I'll I.\(I
-
-
-Word_Box[399]: x=438, y=1370, w=40, h=15, confidence=61, text= WHK
-
-
-Word_Box[400]: x=488, y=1363, w=67, h=25, confidence=76, text= liiniiv
-
-
-Word_Box[401]: x=565, y=1365, w=13, h=23, confidence=69, text= I)
-
-
-Word_Box[402]: x=602, y=1376, w=9, h=4, confidence=0, text= 
-Word_Box[403]: x=131, y=1421, w=22, h=24, confidence=75, text= Pr
-
-
-Word_Box[404]: x=234, y=1398, w=8, h=14, confidence=74, text= S
-
-
-Word_Box[405]: x=250, y=1396, w=34, h=20, confidence=83, text= iml
-
-
-Word_Box[406]: x=291, y=1402, w=11, h=15, confidence=64, text= Li
-
-
-Word_Box[407]: x=310, y=1397, w=45, h=23, confidence=86, text= cool
-
-
-Word_Box[408]: x=365, y=1402, w=54, h=26, confidence=53, text= guy."
-
-
-Word_Box[409]: x=430, y=1402, w=14, h=23, confidence=89, text= It
-
-
-Word_Box[410]: x=453, y=1412, w=23, h=14, confidence=69, text= W1
-
-
-Word_Box[411]: x=580, y=1375, w=21, h=14, confidence=78, text= L'(
-
-
-Word_Box[412]: x=608, y=1375, w=52, h=15, confidence=62, text= lIllf\L‘
-
-
-Word_Box[413]: x=671, y=1366, w=28, h=24, confidence=79, text= lic
-
-
-Word_Box[414]: x=707, y=1375, w=8, h=14, confidence=60, text= S
-
-
-Word_Box[415]: x=725, y=1369, w=37, h=20, confidence=75, text= not
-
-
-Word_Box[416]: x=772, y=1373, w=10, h=15, confidence=0, text= 
-Word_Box[417]: x=793, y=1370, w=46, h=22, confidence=79, text= vc ry
-
-
-Word_Box[418]: x=847, y=1357, w=45, h=27, confidence=75, text= cool
-
-
-Word_Box[419]: x=153, y=1427, w=147, h=36, confidence=59, text= mymﬂll they
-
-
-Word_Box[420]: x=308, y=1443, w=52, h=17, confidence=74, text= W(’tL'
-
-
-Word_Box[421]: x=386, y=1426, w=11, h=27, confidence=0, text= 
-Word_Box[422]: x=473, y=1413, w=101, h=24, confidence=65, text= H3 Callltp.
-
-
-Word_Box[423]: x=90, y=1458, w=156, h=35, confidence=71, text= ndtvmewnuu
-
-
-Word_Box[424]: x=348, y=1447, w=10, h=14, confidence=46, text= t.
-
-
-Word_Box[425]: x=370, y=1448, w=87, h=26, confidence=63, text= llaﬂllllg
-
-
-Word_Box[426]: x=466, y=1444, w=35, h=24, confidence=76, text= tlic
-
-
-Word_Box[427]: x=512, y=1455, w=58, h=15, confidence=66, text= .§L‘T\’C
-
-
-Word_Box[428]: x=89, y=1496, w=103, h=37, confidence=69, text= that script
-
-
-Word_Box[429]: x=247, y=1478, w=63, h=37, confidence=72, text= ﬂlllng
-
-
-Word_Box[430]: x=316, y=1476, w=49, h=26, confidence=74, text= after
-
-
-Word_Box[431]: x=373, y=1480, w=115, h=28, confidence=72, text= characters
-
-
-Word_Box[432]: x=528, y=1488, w=20, h=22, confidence=0, text= 
-Word_Box[433]: x=573, y=1457, w=17, h=14, confidence=64, text= IS
-
-
-Word_Box[434]: x=601, y=1457, w=29, h=14, confidence=77, text= Ull
-
-
-Word_Box[435]: x=642, y=1448, w=73, h=24, confidence=77, text= wliicli
-
-
-Word_Box[436]: x=734, y=1448, w=4, h=22, confidence=0, text= 
-Word_Box[437]: x=748, y=1440, w=145, h=30, confidence=64, text= liciiicc|mol;'s
-
-
-Word_Box[438]: x=199, y=1514, w=101, h=29, confidence=70, text= mining?‘
-
-
-Word_Box[439]: x=307, y=1516, w=36, h=24, confidence=35, text= 'lt‘.s
-
-
-Word_Box[440]: x=352, y=1524, w=91, h=30, confidence=78, text= running
-
-
-Word_Box[441]: x=451, y=1505, w=32, h=44, confidence=78, text= OI]
-
-
-Word_Box[442]: x=490, y=1495, w=29, h=55, confidence=88, text= in
-M:
-
-
-Word_Box[443]: x=546, y=1497, w=36, h=37, confidence=77, text= UH]
-
-
-Word_Box[444]: x=593, y=1490, w=80, h=23, confidence=71, text= Cruise
-
-
-Word_Box[445]: x=684, y=1490, w=89, h=23, confidence=66, text= IH()\’lL'3:
-
-
-Word_Box[446]: x=783, y=1480, w=110, h=28, confidence=54, text= ‘"W|iL-re‘:
-
-
-Word_Box[447]: x=516, y=1529, w=96, h=24, confidence=68, text= aw.-ricl<.'
-
-
-Word_Box[448]: x=622, y=1530, w=69, h=27, confidence=78, text= 'VVcll,
-
-
-Word_Box[449]: x=702, y=1538, w=40, h=15, confidence=88, text= lltll
-
-
-Word_Box[450]: x=754, y=1530, w=13, h=22, confidence=92, text= ll
-
-
-Word_Box[451]: x=778, y=1522, w=79, h=29, confidence=74, text= iiistcad
-
-
-Word_Box[452]: x=867, y=1528, w=26, h=15, confidence=74, text= (tll
+Textline_Box[71]: x=106, y=28, w=497, h=43, confidence=72, text= 1-...‘
+ar, the facebook effect
 
 

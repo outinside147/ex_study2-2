@@ -22,18 +22,15 @@ int main()
 {
 	// 結果をテキストに出力
 	ofstream ofs("../image/component.txt");
-	ofstream log("../image/log.txt");
-	ofstream scn("../image/scn.txt");
-	ofstream lbx("../image/lbox.txt");
 
 	Mat src = imread("../../../source_images/img1_3_2.jpg", 1);
 	Pix *image = pixRead("../../../source_images/img1_3_2.jpg");
 	Mat para_map = src.clone();
 	Mat line_map = src.clone();
-	Mat c_line_map = src.clone();
 	Mat word_map = src.clone();
 
-	int para_row = 0;
+	int lparam_end = 0;
+	int rparam_end = 0;
 
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
@@ -46,105 +43,61 @@ int main()
 
 	for (int i = 0; i < para_boxes->n; i++) {
 		BOX* box = boxaGetBox(para_boxes, i, L_CLONE); //boxes->n .. number of box in ptr array
+		lparam_end = box->x; // 段落の左端
+		rparam_end = box->x + box->w; //段落の右端
+
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 
 		// 認識結果をテキストファイルとして出力する
-		//ofs << "Para_Box["<< i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
-
+		ofs << "Para_Box["<< i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+		
 		// 分割した範囲を切り取ってそれぞれの画像にする
 		//Rect rect(box->x, box->y, box->w, box->h);
 		//Mat part_img(src, rect);
-		para_row = box->h;
 		//imwrite("../image/splitImages/para_" + to_string(i) + ".png", part_img);
 
 		// 画像に分割した範囲を描写する
 		//rectangle(para_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,0,255),1,4);
-		//imwrite("../image/splitImages/map/para_map.png", para_map);
+		//imwrite("../image/splitImages/map_para.png", para_map);
 	}
 
-	// 走査した範囲かどうかを記録する配列
-	Mat scanned_pos = Mat::zeros(src.rows, src.cols, CV_8UC1);
-
-	// 明らかに誤認識している行を消去する
-	Boxa* suit_Lboxes = boxaCreate(line_boxes->n);
+	// 行単位での認識結果を書き出す
 	for (int i = 0; i < line_boxes->n; i++) {
-		// 囲う長方形の高さが一定値以上あれば別の行列に格納する
 		BOX* box = boxaGetBox(line_boxes, i, L_CLONE);
-		if (box->h > 20){
-			boxaAddBox(suit_Lboxes, box, L_CLONE);
-			//printf("line extracted : i=%3d , box->x=%3d , box->y=%3d , box->w=%3d , box->h=%3d .\n",i,box->x,box->y,box->w,box->h);
-		}
-	}
-
-	Boxa* correct_Lboxes = boxaCreate(suit_Lboxes->n);
-	int break_flg = 0; // 初期値0 ,　flg=1
-
-	for (int i = 0; i < suit_Lboxes->n; i++) {
-		BOX* box = boxaGetBox(suit_Lboxes, i, L_CLONE);
-		lbx << "suit_Lboxes["<< i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
-		// この行が既に走査済かどうか調べる
-		for (int j = box->x; j < box->x + box->w; j++){
-			for (int k = box->y; k < box->y + box->h; k++){
-				//printf("j=%3d , k=%3d\n", j, k);
-				if (scanned_pos.at<unsigned char>(k, j) == 0){
-					// 未探索であればフラグを代入
-					scanned_pos.at<unsigned char>(k, j) = 1;
-				}
-				// 走査済であれば、この行を飛ばす
-				else if (scanned_pos.at<unsigned char>(k, j) == 1){
-					//if (i == suit_Lboxes->n - 1) break;
-					// 次の行を変数に格納してループを脱する
-					//box = boxaGetBox(suit_Lboxes, i + 1, L_CLONE);
-					//printf("i=%3d, j=%3d, k=%3d, break\n", i, j, k);
-					//scn << "scan_area i=" << i << ", box->x=" << j << ", box->y=" << k << " break " << endl;
-					break_flg = 1;
-					//break;
-				}
-			}
-		}
-		if (break_flg == 0){
-			boxaAddBox(correct_Lboxes, box, L_CLONE);
-		}
-		break_flg = 0;
-
 		api->SetRectangle(box->x, box->y, box->w, box->h);
-		char* ocrResult = api->GetUTF8Text();
-		int conf = api->MeanTextConf();
-		ofs << "Textline_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 
-		//Rect rect(box->x, box->y, box->w, box->h);
-		//Mat part_img(src, rect);
-		//imwrite("../image/splitImages/line_" + to_string(i) + ".png", part_img);
-
-		rectangle(line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 255, 0), 1, 4); //緑色
-		imwrite("../image/splitImages/map_line.png", line_map);
+		//rectangle(line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 255, 0), 1, 4); //緑色
+		//imwrite("../image/splitImages/map_line.png", line_map);
 	}
 
-	for (int i = 0; i < correct_Lboxes->n; i++){
-		BOX* box = boxaGetBox(correct_Lboxes, i, L_CLONE);
-		api->SetRectangle(box->x, box->y, box->w, box->h);
-		char* ocrResult = api->GetUTF8Text();
-		int conf = api->MeanTextConf();
-		ofs << "Textline_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
-		
-		Rect rect(box->x, box->y, box->w, box->h);
-		Mat part_img(src, rect);
-		imwrite("../image/splitImages/c_line_" + to_string(i) + ".png", part_img);
+	int min_x = src.cols;
+	int min_y = src.rows;
+	int min_w = 0;
+	int min_h = 0;
 
-		rectangle(c_line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4); //赤色
-		imwrite("../image/splitImages/map_c_line.png", c_line_map);
-	}
+	Boxa* correct_boxes = boxaCreate(50); // 文章の左上から調査して取得した順で単語を格納する配列 , 1行の単語列
 
 	// 明らかに誤認識している単語を消去する
 	Boxa* suit_Wboxes = boxaCreate(line_boxes->n);
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
 		if (box->h > 3  && box->w > 3){
+			// 最も左上(最小)の座標を持つ単語領域を抽出する
+			if (box->x < min_x && box->y < min_y){
+				min_x = box->x;
+				min_y = box->y;
+				min_w = box->w;
+				min_h = box->h;
+			}
 			boxaAddBox(suit_Wboxes, box, L_CLONE);
 			//printf("word extracted : i=%3d , box->x=%3d , box->y=%3d , box->w=%3d , box->h=%3d .\n", i, box->x, box->y, box->w, box->h);
 		}
 	}
 
+	printf("lparam_end=%3d, rparam_end=%3d\n", lparam_end, rparam_end);
+	printf("init : min_x=%3d, min_y=%3d, min_w=%3d, min_h=%3d\n",min_x,min_y,min_w,min_h);
+
+	// 単語単位での認識結果を書き出す
 	for (int i = 0; i < suit_Wboxes->n; i++) {
 		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE);
 		api->SetRectangle(box->x, box->y, box->w, box->h);
@@ -156,33 +109,27 @@ int main()
 		//Mat part_img(src, rect);
 		//imwrite("../image/splitImages/word_" + to_string(i) + ".png", part_img);
 
-		rectangle(word_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
-		imwrite("../image/splitImages/map_word.png", word_map);
+		//rectangle(word_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
+		//imwrite("../image/splitImages/map_word.png", word_map);
 	}
 
-	/*
-	// 行に含まれる単語を抽出する
-	for (int i = 0; i < line_boxes->n; i++){
-		int top = para_row;
-		for (int j = 0; j < word_boxes->n; j++){
-			BOX* line_box = boxaGetBox(line_boxes, i, L_CLONE); //1行の座標 (x,y,w,h)
-			BOX* word_box = boxaGetBox(word_boxes, j, L_CLONE); //1単語の座標 (x,y,w,h)
-
-			for (int k = line_box->x; k <= line_box->x + line_box->w; k++){
-				for (int m = line_box->y; m <= line_box->y + line_box->h; m++){
-					if (k == word_box->x && m == word_box->y){
-						//log << "i=" << i << ", j=" << j << ", k=" << k << ", m=" << m << ", top=" << top << endl;
-
-						// 一行の中にある単語の中で最も上にある物の座標を得る
-						if (m < top){
-							top = m;
-							//log << "top = m = " << m << endl;
-						}
+	for (int i = 0; i < suit_Wboxes->n; i++) {
+		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE);
+		for (int j = min_x + min_w; j <= rparam_end; j++){
+			for (int k = 0; k <= min_y + min_h; k++){
+				if (j == box->x && k == box->y){
+					boxaAddBox(correct_boxes, box, L_CLONE);
+					if (i != suit_Wboxes->n){
+						box = boxaGetBox(suit_Wboxes, i + 1, L_CLONE);
 					}
+					break;
 				}
 			}
-			//     取りだした値を使って全体を最上端に合わせる
 		}
 	}
-	*/
+
+	for (int i = 0; i < correct_boxes->n; i++) {
+		BOX* box = boxaGetBox(correct_boxes, i, L_CLONE);
+		printf("num=%2d, i=%2d, box->x=%3d, box->y=%3d, box->w=%3d, box->h=%3d\n", correct_boxes->n, i, box->x, box->y, box->w, box->h);
+	}
 }

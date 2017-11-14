@@ -75,7 +75,8 @@ int main()
 	int min_w = 0;
 	int min_h = 0;
 
-	Boxa* correct_boxes = boxaCreate(50); // 文章の左上から調査して取得した順で単語を格納する配列 , 1行の単語列
+	// 1行の単語列 (文章の左上から調査して取得した順で単語を格納する配列) 
+	Boxa* correct_boxes = boxaCreate(50);
 
 	// 明らかに誤認識している単語を消去する
 	Boxa* suit_Wboxes = boxaCreate(line_boxes->n);
@@ -113,19 +114,52 @@ int main()
 		//imwrite("../image/splitImages/map_word.png", word_map);
 	}
 
-	for (int i = 0; i < suit_Wboxes->n; i++) {
+
+	int i = 0;
+
+	// 複数行の単語列を格納する配列
+	Boxaa* correct_lines = boxaaCreate(100);
+	while (i < suit_Wboxes->n){ // suit_Wboxesの要素数より下である間ループ
 		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE);
+		// 一行の右端まで探索
 		for (int j = min_x + min_w; j <= rparam_end; j++){
 			for (int k = 0; k <= min_y + min_h; k++){
 				if (j == box->x && k == box->y){
+					// 横方向に単語が見つかればそれを保存する
 					boxaAddBox(correct_boxes, box, L_CLONE);
-					if (i != suit_Wboxes->n){
+					if (i != suit_Wboxes->n-1){
+						// suit_Wboxesに含まれる次の単語が横方向に存在するか探索
 						box = boxaGetBox(suit_Wboxes, i + 1, L_CLONE);
+						// 同じようにループを進める
+						i++;
 					}
 					break;
 				}
 			}
 		}
+
+		// 一行の処理が終わった時、次の最も左上端の単語を探す
+		//boxaaAddBoxa(correct_lines, correct_boxes, L_CLONE);
+		// 以前の最小値を保存
+		/*
+		int pre_x = min_x;
+		int pre_y = min_y;
+		min_x = src.cols;
+		min_y = src.rows;
+		for (int m = 0; m < suit_Wboxes->n; m++){
+			BOX* box = boxaGetBox(suit_Wboxes, m, L_CLONE);
+			if (box->x < min_x && box->y < min_y){
+				if (box->x > pre_x && box->y > pre_y){
+					min_x = box->x;
+					min_y = box->y;
+					min_w = box->w;
+					min_h = box->h;
+					printf("min_x=%d , min_y=%d\n", min_x, min_y);
+					break;
+				}
+			}
+		}
+		*/
 	}
 
 	for (int i = 0; i < correct_boxes->n; i++) {

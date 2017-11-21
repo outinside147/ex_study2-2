@@ -22,6 +22,7 @@ int main()
 {
 	// 結果をテキストに出力
 	ofstream ofs("../image/component.txt");
+	ofstream mlog("../image/mlog.txt");
 
 	Mat src = imread("../../../source_images/img1_3_2.jpg", 1);
 	Pix *image = pixRead("../../../source_images/img1_3_2.jpg");
@@ -49,7 +50,7 @@ int main()
 		api->SetRectangle(box->x, box->y, box->w, box->h);
 
 		// 認識結果をテキストファイルとして出力する
-		ofs << "Para_Box["<< i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+		ofs << "Para_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl << endl;
 		
 		// 分割した範囲を切り取ってそれぞれの画像にする
 		//Rect rect(box->x, box->y, box->w, box->h);
@@ -116,50 +117,42 @@ int main()
 
 
 	int i = 0;
+	int break_flg = 0;
 
 	// 複数行の単語列を格納する配列
 	Boxaa* correct_lines = boxaaCreate(100);
-	while (i < suit_Wboxes->n){ // suit_Wboxesの要素数より下である間ループ
+	while (i < suit_Wboxes->n){ // 全ての単語を走査するまでループ
+		//printf("while loop i=%3d\n", i);
 		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE);
-		// 一行の右端まで探索
+		// rparam_end = 文章の右端x座標
+		// 現在の基準点(最も左の点)からその右方向に最も近い単語までの走査
 		for (int j = min_x + min_w; j <= rparam_end; j++){
 			for (int k = 0; k <= min_y + min_h; k++){
 				if (j == box->x && k == box->y){
+					//printf("j=%3d, k=%3d\n", j, k);
 					// 横方向に単語が見つかればそれを保存する
 					boxaAddBox(correct_boxes, box, L_CLONE);
-					if (i != suit_Wboxes->n-1){
+					if (i < suit_Wboxes->n-1){
 						// suit_Wboxesに含まれる次の単語が横方向に存在するか探索
 						box = boxaGetBox(suit_Wboxes, i + 1, L_CLONE);
 						// 同じようにループを進める
-						i++;
+						//i++;
 					}
+					//printf("break then i=%3d\n", i);
 					break;
 				}
 			}
+			if (break_flg == 1) break;
 		}
-
-		// 一行の処理が終わった時、次の最も左上端の単語を探す
-		//boxaaAddBoxa(correct_lines, correct_boxes, L_CLONE);
-		// 以前の最小値を保存
-		/*
-		int pre_x = min_x;
-		int pre_y = min_y;
-		min_x = src.cols;
-		min_y = src.rows;
-		for (int m = 0; m < suit_Wboxes->n; m++){
-			BOX* box = boxaGetBox(suit_Wboxes, m, L_CLONE);
-			if (box->x < min_x && box->y < min_y){
-				if (box->x > pre_x && box->y > pre_y){
-					min_x = box->x;
-					min_y = box->y;
-					min_w = box->w;
-					min_h = box->h;
-					printf("min_x=%d , min_y=%d\n", min_x, min_y);
-					break;
-				}
-			}
-		}
-		*/
+		break_flg = 0;
+		// min_x,min_y,min_w,min_hを次の単語の座標に設定
+		printf("i=%3d , min : x=%3d, y=%3d, w=%3d, h=%3d\n", i,box->x,box->y,box->w,box->h);
+		mlog << "i=" << i << ", min : x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+		min_x = box->x;
+		min_y = box->y;
+		min_w = box->w;
+		min_h = box->h;
+		i++;
 	}
 
 	for (int i = 0; i < correct_boxes->n; i++) {

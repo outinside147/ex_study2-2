@@ -18,6 +18,33 @@ using namespace cv;
 using namespace std;
 using namespace tesseract;
 
+// 2つのBOXを比較する関数
+bool  Date_equal(BOX* box1, BOX* box2){
+	if (box1 == NULL || box2 == NULL) return FALSE;
+	return box1->x == box2->x &&
+		box1->y == box2->y &&
+		box1->w == box2->w &&
+		box1->h == box2->h;
+}
+
+BOX* getMinBox(BOX* min_box, Boxa* boxes){
+	for (int i = 0; i < boxes->n; i++) {
+		BOX* box = boxaGetBox(boxes, i, L_CLONE);
+		if (box->x < min_box->x && box->y < min_box->y){
+			min_box = box;
+		}
+	}
+	return min_box;
+}
+
+BOX* getMinBox(BOX* min_box, BOX* box){
+	if (box == NULL) return min_box;
+	if (box->x < min_box->x && box->y < min_box->y){
+		min_box = box;
+	}
+	return min_box;
+}
+
 int main()
 {
 	// 結果をテキストに出力
@@ -26,6 +53,7 @@ int main()
 
 	Mat src = imread("../../../source_images/img1_3_2.jpg", 1);
 	Pix *image = pixRead("../../../source_images/img1_3_2.jpg");
+
 	Mat para_map = src.clone();
 	Mat line_map = src.clone();
 	Mat word_map = src.clone();
@@ -36,11 +64,9 @@ int main()
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
 	api->SetImage(image);
-	Boxa* para_boxes = api->GetComponentImages(RIL_PARA, true, NULL, NULL); //段落
-	Boxa* line_boxes = api->GetComponentImages(RIL_TEXTLINE, true, NULL, NULL); //行
-	Boxa* word_boxes = api->GetComponentImages(RIL_WORD, true, NULL, NULL); //単語
-	printf("Found textline = %d , word = %d .\n", line_boxes->n, word_boxes->n);
-	//ofs << "found textline = " << line_boxes->n << ",word = " << word_boxes->n << endl << endl;
+	Boxa* para_boxes = api->GetComponentImages(RIL_PARA, true, NULL, NULL);			//段落
+	Boxa* line_boxes = api->GetComponentImages(RIL_TEXTLINE, true, NULL, NULL);		//行
+	Boxa* word_boxes = api->GetComponentImages(RIL_WORD, true, NULL, NULL);			//単語
 
 	for (int i = 0; i < para_boxes->n; i++) {
 		BOX* box = boxaGetBox(para_boxes, i, L_CLONE); //boxes->n .. number of box in ptr array
@@ -51,30 +77,16 @@ int main()
 
 		// 認識結果をテキストファイルとして出力する
 		ofs << "Para_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl << endl;
-		
-		// 分割した範囲を切り取ってそれぞれの画像にする
-		//Rect rect(box->x, box->y, box->w, box->h);
-		//Mat part_img(src, rect);
-		//imwrite("../image/splitImages/para_" + to_string(i) + ".png", part_img);
-
-		// 画像に分割した範囲を描写する
-		//rectangle(para_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,0,255),1,4);
-		//imwrite("../image/splitImages/map_para.png", para_map);
 	}
 
 	// 行単位での認識結果を書き出す
 	for (int i = 0; i < line_boxes->n; i++) {
 		BOX* box = boxaGetBox(line_boxes, i, L_CLONE);
 		api->SetRectangle(box->x, box->y, box->w, box->h);
-
-		//rectangle(line_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 255, 0), 1, 4); //緑色
-		//imwrite("../image/splitImages/map_line.png", line_map);
 	}
 
-	int min_x = src.cols;
-	int min_y = src.rows;
-	int min_w = 0;
-	int min_h = 0;
+	// 最小値(最も左上に位置する)を格納する変数
+	Box* min_box = boxCreate(src.cols, src.rows, 0, 0);
 
 	// 1行の単語列 (文章の左上から調査して取得した順で単語を格納する配列) 
 	Boxa* correct_boxes = boxaCreate(50);
@@ -83,21 +95,16 @@ int main()
 	Boxa* suit_Wboxes = boxaCreate(line_boxes->n);
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
-		if (box->h > 3  && box->w > 3){
-			// 最も左上(最小)の座標を持つ単語領域を抽出する
-			if (box->x < min_x && box->y < min_y){
-				min_x = box->x;
-				min_y = box->y;
-				min_w = box->w;
-				min_h = box->h;
-			}
+		if (box->h > 3 && box->w > 3){
+			// 最も左上(最小)の座標を持つ単語領域(基準値)を抽出する
+			min_box = getMinBox(min_box, box);
 			boxaAddBox(suit_Wboxes, box, L_CLONE);
-			//printf("word extracted : i=%3d , box->x=%3d , box->y=%3d , box->w=%3d , box->h=%3d .\n", i, box->x, box->y, box->w, box->h);
 		}
 	}
+	// 最小の単語を1行目の基準値として保存する
+	boxaAddBox(correct_boxes, min_box, L_CLONE);
 
-	printf("lparam_end=%3d, rparam_end=%3d\n", lparam_end, rparam_end);
-	printf("init : min_x=%3d, min_y=%3d, min_w=%3d, min_h=%3d\n",min_x,min_y,min_w,min_h);
+	printf("init : min_box->x=%3d, min_box->y=%3d, min_box->w=%3d, min_box->h=%3d\n", min_box->x, min_box->y, min_box->w, min_box->h);
 
 	// 単語単位での認識結果を書き出す
 	for (int i = 0; i < suit_Wboxes->n; i++) {
@@ -106,57 +113,77 @@ int main()
 		char* ocrResult = api->GetUTF8Text();
 		int conf = api->MeanTextConf();
 		ofs << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
-
-		//Rect rect(box->x, box->y, box->w, box->h);
-		//Mat part_img(src, rect);
-		//imwrite("../image/splitImages/word_" + to_string(i) + ".png", part_img);
-
-		//rectangle(word_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
-		//imwrite("../image/splitImages/map_word.png", word_map);
 	}
-
 
 	int i = 0;
 	int break_flg = 0;
 
-	// 複数行の単語列を格納する配列
+	// 各行を格納する配列 Boxa型のcorrect_boxesを格納
 	Boxaa* correct_lines = boxaaCreate(100);
-	while (i < suit_Wboxes->n){ // 全ての単語を走査するまでループ
-		//printf("while loop i=%3d\n", i);
+	// 単語をすべて走査するまでループ
+	while (i < 3){
 		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE);
-		// rparam_end = 文章の右端x座標
-		// 現在の基準点(最も左の点)からその右方向に最も近い単語までの走査
-		for (int j = min_x + min_w; j <= rparam_end; j++){
-			for (int k = 0; k <= min_y + min_h; k++){
+		printf("x=%d,y=%d\n", box->x, box->y);
+		// 得たボックスが空の場合の処理を追加 **
+		// 基準点から右方向に単語を探索
+		for (int j = min_box->x + min_box->w; j <= rparam_end; j++){
+			for (int k = 0; k <= min_box->y + min_box->h; k++){
 				if (j == box->x && k == box->y){
-					//printf("j=%3d, k=%3d\n", j, k);
-					// 横方向に単語が見つかればそれを保存する
+					// この行に含まれる単語として配列に格納
 					boxaAddBox(correct_boxes, box, L_CLONE);
-					if (i < suit_Wboxes->n-1){
-						// suit_Wboxesに含まれる次の単語が横方向に存在するか探索
+					printf("Add : i=%3d , min : x=%3d, y=%3d, w=%3d, h=%3d\n", i, box->x, box->y, box->w, box->h);
+					// 比較対象がなくなった場合、その操作を行わない
+					if (i < 2){
 						box = boxaGetBox(suit_Wboxes, i + 1, L_CLONE);
-						// 同じようにループを進める
-						//i++;
+						break_flg = 1;
 					}
-					//printf("break then i=%3d\n", i);
 					break;
 				}
 			}
+			// ループを脱する
 			if (break_flg == 1) break;
 		}
-		break_flg = 0;
-		// min_x,min_y,min_w,min_hを次の単語の座標に設定
-		printf("i=%3d , min : x=%3d, y=%3d, w=%3d, h=%3d\n", i,box->x,box->y,box->w,box->h);
-		mlog << "i=" << i << ", min : x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
-		min_x = box->x;
-		min_y = box->y;
-		min_w = box->w;
-		min_h = box->h;
-		i++;
-	}
+		if (break_flg == 0){ // 単語が見つからずにループを脱した場合
+			// この場合、文章の右端まで走査し終えた。よって次の行の左上端の座標を見つける
+			// これまでに見つけた単語を除いたものから、最小(最も左上)の座標にある単語を見つける
+			min_box->x = src.cols;
+			min_box->y = src.rows;
+			min_box->w = 0;
+			min_box->h = 0;
+			for (int m = 0; m < suit_Wboxes->n; m++) {
+				// 文字を格納する配列
+				BOX* org_box = boxaGetBox(suit_Wboxes, m, L_CLONE);
+				for (int p = 0; p < correct_boxes->n; p++){
+					// 抽出済の文字を格納する配列
+					BOX* c_box = boxaGetBox(correct_boxes, p, L_CLONE);
+					// 全配列と抽出した配列を比較し、含まれていない場合は比較対象とする
+					// Date_equal関数を呼び出して、その結果がfalseの場合のみ最小値の更新を行う
+					if (!Date_equal(org_box, c_box)){
+						// 最小値の座標を取得する
+						min_box = getMinBox(min_box, org_box);
+					}
+				}
+			}
+			i++;
+			printf("flg=%d, i=%3d , min_box=(%3d,%3d,%3d,%3d)\n", break_flg, i, min_box->x,min_box->y,min_box->w,min_box->h);
 
+		}
+		else if (break_flg == 1){ // 単語が見つかってループを脱した場合
+			printf("i=%3d , min : x=%3d, y=%3d, w=%3d, h=%3d\n", i, box->x, box->y, box->w, box->h);
+			mlog << "i=" << i << ", min : x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+			// 見つけた単語の座標を次の基準値に指定
+			min_box = box;
+			printf("flg=%d, i=%3d , min_box=(%3d,%3d,%3d,%3d)\n", break_flg, i, min_box->x, min_box->y, min_box->w, min_box->h);
+			// フラグを初期化
+			break_flg = 0;
+			// 次の単語を探す
+			i++;
+		}
+	}
+	
+	printf("correct_boxes->n = %3d\n", correct_boxes->n);
 	for (int i = 0; i < correct_boxes->n; i++) {
 		BOX* box = boxaGetBox(correct_boxes, i, L_CLONE);
-		printf("num=%2d, i=%2d, box->x=%3d, box->y=%3d, box->w=%3d, box->h=%3d\n", correct_boxes->n, i, box->x, box->y, box->w, box->h);
+		printf("i=%2d, box->x=%3d, box->y=%3d, box->w=%3d, box->h=%3d\n", i, box->x, box->y, box->w, box->h);
 	}
 }

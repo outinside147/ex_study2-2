@@ -25,6 +25,34 @@ bool  Date_equal(BOX* box1, BOX* box2){
 	return box1->x == box2->x && box1->y == box2->y && box1->w == box2->w && box1->h == box2->h;
 }
 
+// boxがboxesの中にあればtrue、そうでなければfalseを返す
+bool set_member(BOX* box, Boxa* boxes){
+	int i = 0;
+	BOX* include_box = boxaGetBox(boxes, 0, L_CLONE);
+	while (include_box != box && i != boxes->n - 1){
+		i++;
+		include_box = boxaGetBox(boxes, i, L_CLONE);
+	}
+
+	if (include_box == box){
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void set_difference(Boxa* a_boxes, Boxa* b_boxes, Boxa* c_boxes){
+	int i, j;
+	for (i = 0, j = 0; i < a_boxes->n; i++){
+		BOX* include_abox = boxaGetBox(a_boxes, i, L_CLONE);
+		if (!set_member(include_abox, b_boxes)){
+			boxaAddBox(c_boxes, include_abox, L_CLONE);
+		}
+	}
+}
+
+
 int main()
 {
 	int rparam_end = 893;
@@ -50,112 +78,18 @@ int main()
 	boxaAddBox(suit_Wboxes, box4, L_CLONE);
 	boxaAddBox(suit_Wboxes, box5, L_CLONE);
 
-	for (int i = 0; i < suit_Wboxes->n; i++) {
-		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE);
-		if (box->x <= min_box->x && box->y <= min_box->y){
-			min_box = box;
-		}
-	}
-	boxaAddBox(correct_boxes, min_box, L_CLONE);
-	printf("init : min_box=(%3d,%3d,%3d,%3d) , suit_Wboxes->n=%3d \n", min_box->x, min_box->y, min_box->w, min_box->h, suit_Wboxes->n);
+	Boxa* test_boxes = boxaCreate(50);
+	boxaAddBox(test_boxes, box0, L_CLONE);
+	boxaAddBox(test_boxes, box1, L_CLONE);
+	boxaAddBox(test_boxes, box2, L_CLONE);
 
-	// 単語をすべて走査するまでループ
-	for (int i = 1; i < suit_Wboxes->n; i++){
-		BOX* box = boxaGetBox(suit_Wboxes, i, L_CLONE);
-		//printf("box=(%3d,%3d,%3d,%3d)\n", box->x, box->y, box->w, box->h);
-		// 得たボックスが空の場合の処理を追加 **
-		// 基準点から右方向に単語を探索
-		for (int j = min_box->x + min_box->w; j <= rparam_end; j++){
-			for (int k = 0; k <= min_box->y + min_box->h; k++){
-				if (j == box->x && k == box->y){
-					printf("word extracted : i=%3d , box=(%3d,%3d)\n", i, j, k);
-					// この行に含まれる単語として配列に格納
-					boxaAddBox(correct_boxes, box, L_CLONE);
-					break_flg = 1;
-					break;
-				}
-			} // ループを脱する
-			if (break_flg == 1) break;
-		}
-		
-		if (break_flg == 0){
-			// 基準値か右方向に単語が存在しなかった場合
-			printf("not extracted : i=%3d\n", i);
-			// これまでに見つけた単語を除いた中から、最小(最も左上に位置する)の単語を見つける。それを次の基準値とする
-			printf("suit_Wboxes->n=%3d , correct_boxes->n=%3d\n", suit_Wboxes->n, correct_boxes->n);
-			for (int m = 0; m < suit_Wboxes->n; m++){
-				BOX* org_box = boxaGetBox(suit_Wboxes, m, L_CLONE);
-				for (int p = 0; p < correct_boxes->n; p++){
-					BOX* c_box = boxaGetBox(correct_boxes, p, L_CLONE);
-					printf("(m,p)=(%3d,%3d) , org_box=(%3d,%3d) , c_box=(%3d,%3d)\n", m, p, org_box->x, org_box->y, c_box->x, c_box->y);
-					if (Date_equal(org_box, c_box)){ //trueの場合
-						printf(" - break - \n");
-						break;
-					} else if (!Date_equal(org_box,c_box)){ //falseの場合
-						// 最小値の座標を取得する
-						// 現在探索している単語の座標より左側にある
-						if (org_box->x < min_box->x){
-							// 現在探索している単語の座標より下側にある
-							if (org_box->y > min_box->y){
-								// これまでに探索した単語を除いて、もっとも上にある単語を次の基準値とする
-								if (org_box->y < nearest_y){
-									//printf("nearest_y=%3d , org_box=(%3d,%3d)\n",nearest_y,org_box->x,org_box->y);
-									nearest_y = org_box->y;
-									min_box->y = nearest_y;
-									min_box->x = org_box->x;
-									min_box->w = org_box->w;
-									min_box->h = org_box->h;
-									printf("nearest_y=%3d\n", nearest_y);
-								}
-							}
-						}
-						//printf("min_box=(%3d,%3d,%3d,%3d)\n", min_box->x, min_box->y, min_box->w, min_box->h);
-					}
-				}
-			}
-			printf("next rows point : min_box=(%3d,%3d)\n", min_box->x, min_box->y);
-			boxaAddBox(correct_boxes, min_box, L_CLONE);
-		}
+	Boxa* dif_boxes = boxaCreate(50);
 
-		// 単語が見つかってループを脱した場合
-		if (break_flg == 1){
-			// フラグを初期化
-			break_flg = 0;
-			// 見つけた単語の座標を次の基準値に指定
-			min_box = box;
-			printf("next word point : min_box=(%3d,%3d,%3d,%3d)\n", min_box->x, min_box->y, min_box->w, min_box->h);
-		}
+	set_difference(suit_Wboxes,test_boxes,dif_boxes);
 
-		/*
-		else if (break_flg == 0){ // 単語が見つからずにループを脱した場合
-			// この場合、文章の右端まで走査し終えた。よって次の行の左上端の座標を見つける
-			// これまでに見つけた単語を除いたものから、最小(最も左上)の座標にある単語を見つける
-			min_box->x = 999;
-			min_box->y = 999;
-			min_box->w = 0;
-			min_box->h = 0;
-			for (int m = 0; m < suit_Wboxes->n; m++) {
-				BOX* org_box = boxaGetBox(suit_Wboxes, m, L_CLONE);
-				for (int p = 0; p < correct_boxes->n; p++){
-					BOX* c_box = boxaGetBox(correct_boxes, p, L_CLONE);
-					// 全配列と抽出した配列を比較し、含まれていない場合は比較対象とする
-					// Date_equal関数を呼び出して、その結果がfalseの場合のみ最小値の更新を行う
-					if (!Date_equal(org_box, c_box)){
-						// 最小値の座標を取得する
-						min_box = getMinBox(min_box, org_box);
-					}
-				}
-			}
-			printf("min_box=(%3d,%3d,%3d,%3d)\n", min_box->x, min_box->y, min_box->w, min_box->h);
-			i++;
-			printf("i=%3d\n", i);
-		}
-		*/
-	}
-
-	printf("correct_boxes->n = %3d\n", correct_boxes->n);
-	for (int i = 0; i < correct_boxes->n; i++) {
-		BOX* box = boxaGetBox(correct_boxes, i, L_CLONE);
+	for (int i = 0; i < dif_boxes->n; i++) {
+		BOX* box = boxaGetBox(dif_boxes, i, L_CLONE);
 		printf("i=%2d, box->x=%3d, box->y=%3d, box->w=%3d, box->h=%3d\n", i, box->x, box->y, box->w, box->h);
 	}
+
 }

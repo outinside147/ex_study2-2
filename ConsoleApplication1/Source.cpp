@@ -98,6 +98,7 @@ int main()
 	ofstream content("../image/component.txt");
 	ofstream ex_boxes("../image/extracted_boxes.txt");
 	ofstream uv_boxes("../image/unvisit_boxes.txt");
+	ofstream ex_lines("../image/extracted_lines.txt");
 	ofstream result("../image/result.txt");
 
 	Mat src = imread("../../../source_images/img1_3_2.jpg", 1);
@@ -133,8 +134,7 @@ int main()
 
 	Box* min_box = boxCreate(src.cols, src.rows, 0, 0); // 最小値(最も左上に位置する)を格納する変数
 	Boxa* extracted_boxes = boxaCreate(50); // 1行の単語列 (文章の左上から調査して取得した順で単語を格納する配列)
-	//Boxa* unvisit_boxes = boxaCreate(50); // 未走査の単語列を格納する配列
-	Boxa* unvisit_boxes = nullptr;
+	Boxa* unvisit_boxes = nullptr; // 未走査の単語列を格納する配列
 
 	// 明らかに誤認識している単語を消去する
 	Boxa* valid_boxes = boxaCreate(line_boxes->n);
@@ -164,9 +164,6 @@ int main()
 	int break_flg = 0;
 	int nearest_y = 999;
 
-	// 各行を格納する配列 Boxa型のextracted_boxesを格納
-	// 編集ここから **
-	Boxaa* extracted_lines = boxaaCreate(100);
 	// 単語をすべて走査するまでループ
 	for (int i = 1; i < valid_boxes->n; i++){
 		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
@@ -187,8 +184,9 @@ int main()
 
 		// 基準値か右方向に単語が存在しなかった場合
 		if (break_flg == 0){
-			// これまでに見つけた単語を除いた中から、最小(最も左上に位置する)の単語を見つける。それを次の基準値とする
+			// 未探索の単語を格納する配列
 			unvisit_boxes = boxaCreate(50);
+			// 未探索の単語列から、最小(最も左上に位置する)の単語を見つける。それを次の基準値とする
 			set_difference(valid_boxes, extracted_boxes, unvisit_boxes);
 			printf("unvisit_boxes->n=%3d\n",unvisit_boxes->n);
 			min_box = getNextRow(min_box, unvisit_boxes);
@@ -196,6 +194,9 @@ int main()
 			printf("next row point : min_box=(%3d,%3d)\n", min_box->x, min_box->y);
 			boxaAddBox(extracted_boxes, min_box, L_CLONE);
 			result << "break_flg=" << break_flg << ", i=" << i << ", box= (" << box->x << "," << box->y << ")" << ", next point= (" << min_box->x << "," << min_box->y << ")" << endl;
+			// 画像に分割した範囲を描写する
+			rectangle(word_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,0,255),1,4);
+			imwrite("../image/splitImages/map_word.png", word_map);
 		}
 
 		// 単語が見つかってループを脱した場合
@@ -206,9 +207,13 @@ int main()
 			result << "break_flg=" << break_flg << ", i=" << i << ", box= (" << box->x << "," << box->y << ")" << ", next point= (" << min_box->x << "," << min_box->y << ")" << endl;
 			// フラグを初期化
 			break_flg = 0;
+			// 画像に分割した範囲を描写する
+			rectangle(word_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,255,0),1,4);
+			imwrite("../image/splitImages/map_word.png", word_map);
 		}
 	}
 
+	// 抽出した単語を出力
 	printf("extracted_boxes->n=%3d\n", extracted_boxes->n);
 	ex_boxes << "extracted_boxes->n=" << extracted_boxes->n << endl;
 	for (int i = 0; i < extracted_boxes->n; i++) {
@@ -216,6 +221,7 @@ int main()
 		ex_boxes << "i=" << i << ", box= (" << box->x << "," << box->y << "," << box->w << "," << box->h << ")" << endl;
 	}
 
+	// 最終的に未探索だった単語を出力
 	printf("unvisit_boxes->n=%3d\n", unvisit_boxes->n);
 	uv_boxes << "unvisit_boxes->n=" << unvisit_boxes->n << endl;
 	for (int i = 0; i < unvisit_boxes->n; i++) {

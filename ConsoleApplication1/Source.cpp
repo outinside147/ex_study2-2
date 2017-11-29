@@ -59,9 +59,6 @@ int main()
 	Mat para_map = src.clone();
 	Mat mat_para_img = imread("../image/splitImages/para.png", 1);
 
-	int lparam_end = 0;
-	int rparam_end = 0;
-
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
 	api->SetImage(image);
@@ -70,8 +67,6 @@ int main()
 	// 文書画像から段落を抽出する
 	for (int i = 0; i < para_boxes->n; i++) {
 		BOX* box = boxaGetBox(para_boxes, i, L_CLONE); //boxes->n .. number of box in ptr array
-		lparam_end = box->x; // 段落の左端
-		rparam_end = box->x + box->w; //段落の右端
 		// 分割した範囲を書き出す
 		Rect rect(box->x, box->y, box->w, box->h);
 		Mat part_img(src, rect);
@@ -160,14 +155,16 @@ int main()
 
 	int rcnt = 1;
 	BOX* min_box = boxaGetBox(sort_yboxes, 0, L_CLONE);
-
+	// ソートされた単語について、同じ行に複数単語が候補として抽出されている場合、最も左にある単語をその行の先頭単語とする
 	while (rcnt < sort_yboxes->n){
 		BOX* cur_box = boxaGetBox(sort_yboxes, rcnt, L_CLONE);
 		int dif_y = cur_box->y - min_box->y;
+		// 単語の高さが30以上ある場合、先頭単語の配列に格納する
 		if (dif_y >= 30){
 			boxaAddBox(leading_boxes, min_box, L_CLONE);
 			min_box = cur_box;
 		}
+		// 単語の高さが30未満の場合、最もXが小さいものを取得する
 		else if (dif_y < 30){
 			if (cur_box->x < min_box->x){
 				min_box = cur_box;
@@ -176,6 +173,7 @@ int main()
 		rcnt++;
 	}
 
+	// 抽出した先頭単語を出力する
 	for (int i = 0; i < leading_boxes->n; i++){
 		BOX* box = boxaGetBox(leading_boxes, i, L_CLONE);
 		/*

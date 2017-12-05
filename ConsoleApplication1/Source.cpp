@@ -57,7 +57,8 @@ int main()
 	Mat src = imread("../../../source_images/img1_3_2.jpg", 1);
 	Pix *image = pixRead("../../../source_images/img1_3_2.jpg");
 	Mat para_map = src.clone();
-	Mat mat_para_img = imread("../image/splitImages/para.png", 1);
+	//Mat mat_para_img = imread("../image/splitImages/para.png", 1); //
+	Mat mat_para_img;
 
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
@@ -72,11 +73,6 @@ int main()
 		Mat part_img(src, rect);
 		mat_para_img = part_img;
 		imwrite("../image/splitImages/para.png", part_img);
-		// 画像に分割した範囲を描写する
-		/*
-		rectangle(para_map, Point(box->x, box->y), Point(box->x+box->w, box->y+box->h),Scalar(0,0,255),1,4);
-		imwrite("../image/splitImages/map_para.png", para_map);
-		*/
 	}
 
 	// 抜き出した段落画像をTesseractで認識させる
@@ -145,12 +141,9 @@ int main()
 	sort_yboxes = boxaSort(sort_yboxes, L_SORT_BY_Y, L_SORT_INCREASING, NULL);
 	for (int i = 0; i < sort_yboxes->n; i++){
 		BOX* box = boxaGetBox(sort_yboxes, i, L_CLONE);
-		/*
 		rectangle(word_map2, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 255, 0), 1, 4);
 		imwrite("../image/splitImages/map_word_ysort.png", word_map2);
 		sorty << "sorted_y[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
-		*/
-		
 	}
 
 	int rcnt = 1;
@@ -176,11 +169,8 @@ int main()
 	// 抽出した先頭単語を出力する
 	for (int i = 0; i < leading_boxes->n; i++){
 		BOX* box = boxaGetBox(leading_boxes, i, L_CLONE);
-		/*
 		lboxes << "leading_boxes[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 		rectangle(word_map3, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
 		imwrite("../image/splitImages/map_word_leading.png", word_map3);
-		*/
 	}
-
 }

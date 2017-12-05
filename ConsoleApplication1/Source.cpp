@@ -1,4 +1,5 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
+#define _USE_MATH_DEFINES
 
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
@@ -14,12 +15,13 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
+#define PI  3.14159265358979323846
+
 using namespace cv;
 using namespace std;
 using namespace tesseract;
 
-
-// box‚ªboxes‚Ì’†‚É‚ ‚ê‚ÎtrueA‚»‚¤‚Å‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·
+// boxãŒboxesã®ä¸­ã«ã‚ã‚Œã°trueã€ãã†ã§ãªã‘ã‚Œã°falseã‚’è¿”ã™
 bool set_member(BOX* box, Boxa* boxes){
 	int i = 0;
 	BOX* include_box = boxaGetBox(boxes, 0, L_CLONE);
@@ -36,7 +38,7 @@ bool set_member(BOX* box, Boxa* boxes){
 	}
 }
 
-// a_boxes‚Ì—v‘f‚ğˆê‚Â‚¸‚Â’²‚×Ab_boxes‚Ì—v‘f‚Å‚È‚¢‚È‚çAc_boxes‚É‰Á‚¦‚é
+// a_boxesã®è¦ç´ ã‚’ä¸€ã¤ãšã¤èª¿ã¹ã€b_boxesã®è¦ç´ ã§ãªã„ãªã‚‰ã€c_boxesã«åŠ ãˆã‚‹
 void set_difference(Boxa* a_boxes, Boxa* b_boxes, Boxa* c_boxes){
 	int i, j;
 	for (i = 0, j = 0; i < a_boxes->n; i++){
@@ -47,41 +49,65 @@ void set_difference(Boxa* a_boxes, Boxa* b_boxes, Boxa* c_boxes){
 	}
 }
 
+// å˜èªã®ä¸­å¿ƒåº§æ¨™ã‚’æ±‚ã‚ã‚‹
+BOX* getCenterPoint(BOX* box){
+	BOX* center_point = nullptr;
+	center_point->x = box->x + (box->w / 2);
+	center_point->y = box->y + (box->h / 2);
+	return center_point;
+}
+
+// 2ã¤ã®å˜èªã®ä¸­å¿ƒåº§æ¨™ã‚’å–å¾—ã—ã€ãã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
+BOX* getVector(BOX* box1, BOX* box2){
+	BOX* vec = nullptr;
+	BOX* center1 = getCenterPoint(box1);
+	BOX* center2 = getCenterPoint(box2);
+	vec->x = center1->x - center2->x;
+	vec->y = center1->y - center2->y;
+	return vec;
+}
+
+// ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•ã‚’å–å¾—ã™ã‚‹ã€€è¿”ã‚Šå€¤ã¯âˆš(x^2 + y^2)
+double getVectorLength(BOX* box){
+	return sqrt((box->x * box->x) + (box->y * box->y));
+}
+
+// 2ã¤ã®å˜èªã®å†…ç©ã‚’æ±‚ã‚ã‚‹
+double getProduct(BOX* box1, BOX* box2){
+	return (box1->x * box2->x) + (box1->y * box2->y);
+}
+
 int main()
 {
 	ofstream content("../image/component.txt");
-	ofstream sortx("../image/sorted_x.txt");
-	ofstream sorty("../image/sorted_y.txt");
-	ofstream lboxes("../image/leading_boxes.txt");
 
 	Mat src = imread("../../../source_images/img1_3_2.jpg", 1);
 	Pix *image = pixRead("../../../source_images/img1_3_2.jpg");
 	Mat para_map = src.clone();
-	//Mat mat_para_img = imread("../image/splitImages/para.png", 1); //
 	Mat mat_para_img;
 
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
 	api->SetImage(image);
-	Boxa* para_boxes = api->GetComponentImages(RIL_PARA, true, NULL, NULL); //’i—
+	Boxa* para_boxes = api->GetComponentImages(RIL_PARA, true, NULL, NULL); //æ®µè½
 
-	// •¶‘‰æ‘œ‚©‚ç’i—‚ğ’Šo‚·‚é
+	// æ–‡æ›¸ç”»åƒã‹ã‚‰æ®µè½ã‚’æŠ½å‡ºã™ã‚‹
 	for (int i = 0; i < para_boxes->n; i++) {
 		BOX* box = boxaGetBox(para_boxes, i, L_CLONE); //boxes->n .. number of box in ptr array
-		// •ªŠ„‚µ‚½”ÍˆÍ‚ğ‘‚«o‚·
+		// åˆ†å‰²ã—ãŸç¯„å›²ã‚’æ›¸ãå‡ºã™
 		Rect rect(box->x, box->y, box->w, box->h);
 		Mat part_img(src, rect);
 		mat_para_img = part_img;
 		imwrite("../image/splitImages/para.png", part_img);
 	}
 
-	// ”²‚«o‚µ‚½’i—‰æ‘œ‚ğTesseract‚Å”F¯‚³‚¹‚é
+	// æŠœãå‡ºã—ãŸæ®µè½ç”»åƒã‚’Tesseractã§èªè­˜ã•ã›ã‚‹
 	Mat pw_map = mat_para_img.clone();
 	Pix *para_img = pixRead("../image/splitImages/para.png");
 	TessBaseAPI *api2 = new TessBaseAPI();
 	api2->Init(NULL, "eng");
 	api2->SetImage(para_img);
-	Boxa* word_boxes = api2->GetComponentImages(RIL_WORD, true, NULL, NULL); //’PŒê
+	Boxa* word_boxes = api2->GetComponentImages(RIL_WORD, true, NULL, NULL); //å˜èª
 	for (int i = 0; i < word_boxes->n; i++){
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
 		/*
@@ -90,87 +116,71 @@ int main()
 		*/
 	}
 
-	Mat word_map1 = mat_para_img.clone();
-	Mat word_map2 = mat_para_img.clone();
-	Mat word_map3 = mat_para_img.clone();
-
-	// –¾‚ç‚©‚ÉŒë”F¯‚µ‚Ä‚¢‚é’PŒê‚ğÁ‹‚·‚é
+	// æ˜ã‚‰ã‹ã«èª¤èªè­˜ã—ã¦ã„ã‚‹å˜èªã‚’æ¶ˆå»ã™ã‚‹
 	Boxa* valid_boxes = boxaCreate(word_boxes->n);
-	for (int i = 0; i < word_boxes->n; i++) {
+	for (int i = 0; i < 30; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
-		if (box->h > 5 && box->w > 5){ // è‡’l‚Ì’²®‚ª•K—v **
+		if (box->h > 5 && box->w > 5){ // é–¾å€¤ã®èª¿æ•´ãŒå¿…è¦ **
 			boxaAddBox(valid_boxes, box, L_CLONE);
 		}
 	}
-
-	// ’PŒê’PˆÊ‚Å‚Ì”F¯Œ‹‰Ê‚ğ‘‚«o‚·
-	for (int i = 0; i < valid_boxes->n; i++) {
-		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
-		api->SetRectangle(box->x, box->y, box->w, box->h);
-		char* ocrResult = api->GetUTF8Text();
-		int conf = api->MeanTextConf();
-		content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
-		/*
-		Rect rect(box->x, box->y, box->w, box->h);
-		Mat part_img(mat_para_img, rect);
-		imwrite("../image/splitImages/word_" + to_string(i) + ".png", part_img);
-		//
-		rectangle(word_map1, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
-		imwrite("../image/splitImages/map_word_valid.png", word_map1);
-		*/
-	}
-
-	Boxa* sort_xboxes = boxaCreate(500);
-	Boxa* sort_yboxes = boxaCreate(100);
-	Boxa* leading_boxes = boxaCreate(100);
-
-	// x‚Ì¸‡‚Åƒ\[ƒg
-	sort_xboxes = boxaSort(valid_boxes, L_SORT_BY_X, L_SORT_INCREASING,NULL);
-	for (int i = 0; i < sort_xboxes->n; i++){
-		BOX* box = boxaGetBox(sort_xboxes, i, L_CLONE);
-		//sortx << "sorted_x[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
-	}
-
-	// ƒ\[ƒg‚µ‚½”z—ñ‚Ìæ“ª‚©‚ç100ŒÂ‚Ì’PŒê‚ğs‚Ìæ“ªŒó•â‚Æ‚µ‚Ä•Ê‚Ì”z—ñ‚ÉŠi”[‚·‚é
-	for (int i = 0; i < 100; i++){
-		BOX* box = boxaGetBox(sort_xboxes, i, L_CLONE);
-		boxaAddBox(sort_yboxes, box, L_CLONE);
-	}
 	
-	// y‚Ì¸‡‚Åƒ\[ƒg
-	sort_yboxes = boxaSort(sort_yboxes, L_SORT_BY_Y, L_SORT_INCREASING, NULL);
-	for (int i = 0; i < sort_yboxes->n; i++){
-		BOX* box = boxaGetBox(sort_yboxes, i, L_CLONE);
-		rectangle(word_map2, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 255, 0), 1, 4);
-		imwrite("../image/splitImages/map_word_ysort.png", word_map2);
-		sorty << "sorted_y[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
-	}
+	// å…ˆé ­å˜èªåˆ—
+	Boxa* leading_boxes = boxaCreate(5);
+	Box* box1 = boxCreate(15, 19, 106, 33);
+	Box* box2 = boxCreate(15, 61, 56, 27);
+	Box* box3 = boxCreate(14, 96, 134, 36);
+	Box* box4 = boxCreate(13, 138, 100, 28);
+	boxaAddBox(leading_boxes, box1, L_CLONE);
+	boxaAddBox(leading_boxes, box2, L_CLONE);
+	boxaAddBox(leading_boxes, box3, L_CLONE);
+	boxaAddBox(leading_boxes, box4, L_CLONE);
 
-	int rcnt = 1;
-	BOX* min_box = boxaGetBox(sort_yboxes, 0, L_CLONE);
-	// ƒ\[ƒg‚³‚ê‚½’PŒê‚É‚Â‚¢‚ÄA“¯‚¶s‚É•¡”’PŒê‚ªŒó•â‚Æ‚µ‚Ä’Šo‚³‚ê‚Ä‚¢‚éê‡AÅ‚à¶‚É‚ ‚é’PŒê‚ğ‚»‚Ìs‚Ìæ“ª’PŒê‚Æ‚·‚é
-	while (rcnt < sort_yboxes->n){
-		BOX* cur_box = boxaGetBox(sort_yboxes, rcnt, L_CLONE);
-		int dif_y = cur_box->y - min_box->y;
-		// ’PŒê‚Ì‚‚³‚ª30ˆÈã‚ ‚éê‡Aæ“ª’PŒê‚Ì”z—ñ‚ÉŠi”[‚·‚é
-		if (dif_y >= 30){
-			boxaAddBox(leading_boxes, min_box, L_CLONE);
-			min_box = cur_box;
-		}
-		// ’PŒê‚Ì‚‚³‚ª30–¢–‚Ìê‡AÅ‚àX‚ª¬‚³‚¢‚à‚Ì‚ğæ“¾‚·‚é
-		else if (dif_y < 30){
-			if (cur_box->x < min_box->x){
-				min_box = cur_box;
+	BOX* st_point; //ä¸€ã¤ç›®ã®å˜èª
+	BOX* ed_point; //äºŒã¤ç›®ã®å˜èª
+	BOX* vec;	// 2ã¤ã®å˜èªã‚’çµã¶ãƒ™ã‚¯ãƒˆãƒ«
+	BOX* base_vec = boxCreate(1, 0, 0, 0); // box2=(1,0) , Xè»¸æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«
+	double vec_size1; // ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•1
+	double vec_size2; // ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•2
+	double product; // 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®å†…ç©
+	double vec_cos; // 2ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã®ãªã™è§’åº¦
+
+	double base_angle = cos(30.0 * PI / 180.0); // æ¬¡ã®å˜èªã‚’åŒã˜è¡Œã¨åˆ¤å®šã™ã‚‹åŸºæº–è§’åº¦
+	int min_x = 999;
+	int lbox_cnt = 1;
+	int break_flg = 0;
+
+	// åˆæœŸå€¤ã‚’è¨­å®š
+	st_point = boxaGetBox(leading_boxes, 0, L_CLONE);
+
+	while (lbox_cnt < leading_boxes->n){
+		for (int j = 0; j < valid_boxes->n; j++){
+			ed_point = boxaGetBox(valid_boxes, j, L_CLONE);
+			// 2ã¤ã®å˜èªã®ä¸­å¿ƒåº§æ¨™ã‚’å–å¾—ã—ã€ãã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
+			vec = getVector(st_point, ed_point);
+
+			// Xè»¸æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã¨ä¸Šè¨˜ã§æ±‚ã‚ãŸãƒ™ã‚¯ãƒˆãƒ«ã®ãªã™è§’åº¦ã‚’æ±‚ã‚ã‚‹
+			// å„ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•ã‚’å–å¾—ã™ã‚‹
+			vec_size1 = getVectorLength(vec);
+			vec_size2 = getVectorLength(base_vec);
+
+			// cosÎ¸ã‚’æ±‚ã‚ã‚‹ cosÎ¸=å†…ç©/ (âˆšãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•1*âˆšãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•2)
+			vec_cos = getProduct(vec, base_vec) / (vec_size1 * vec_size2);
+
+			// cosÎ¸ãŒ1/2(=30åº¦ã‹ã‚‰-30åº¦)ã§ã‚ã‚Œã°å³æ–¹å‘ã«ã‚ã‚‹ã¨åˆ¤æ–­ã™ã‚‹
+			if (vec_cos >= base_angle){
+				// è§’åº¦ãŒ30åº¦ã‹ã‚‰-30åº¦ã®ç¯„å›²ã«ã‚ã‚‹ã€ã‹ã¤æœ€ã‚‚è¿‘ã„(Xåº§æ¨™ãŒ)å˜èªã‚’æ¬¡ã®å˜èªã¨ã™ã‚‹
+				if (ed_point->x-st_point->x < min_x){
+					min_x = ed_point->x - st_point->x;
+					break_flg = 1;
+					break;
+				}
 			}
 		}
-		rcnt++;
-	}
-
-	// ’Šo‚µ‚½æ“ª’PŒê‚ğo—Í‚·‚é
-	for (int i = 0; i < leading_boxes->n; i++){
-		BOX* box = boxaGetBox(leading_boxes, i, L_CLONE);
-		lboxes << "leading_boxes[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
-		rectangle(word_map3, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		imwrite("../image/splitImages/map_word_leading.png", word_map3);
+		if (break_flg == 1){
+			break_flg = 0;
+			lbox_cnt++;
+			break;
+		}	
 	}
 }

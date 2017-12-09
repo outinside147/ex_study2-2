@@ -24,7 +24,6 @@ using namespace tesseract;
 typedef struct { double x, y;} Box_array;
 
 // boxがboxesの中にあればtrue、そうでなければfalseを返す
-/*
 bool set_member(BOX* box, Boxa* boxes){
 	int i = 0;
 	BOX* include_box = boxaGetBox(boxes, 0, L_CLONE);
@@ -41,29 +40,6 @@ bool set_member(BOX* box, Boxa* boxes){
 		return false;
 	}
 }
-*/
-bool set_member(BOX* box, Boxa* boxes){
-	int flg = 0;
-	BOX* b_box = box;
-	BOX* include_box = boxaGetBox(boxes, 0, L_CLONE);
-	for (int i = 0; i < boxes->n; i++){
-		printf("box=(%3d,%3d,%3d,%3d) , in_box=(%3d,%3d,%3d,%3d)\n", b_box->x, b_box->y, b_box->w, b_box->h, include_box->x, include_box->y, include_box->w, include_box->h);
-		if (b_box == include_box){
-			printf("set_member : i=%3d\n", i);
-			flg = 1;
-			break;
-		}
-	}
-	printf("flg=%3d\n",flg);
-	if (flg = 1){
-		return true;
-	}
-	else {
-		return false;
-	}
-
-}
-
 
 // a_boxesの要素を一つずつ調べ、b_boxesの要素でないなら、c_boxesに加える
 void set_difference(Boxa* a_boxes, Boxa* b_boxes, Boxa* c_boxes){
@@ -140,14 +116,10 @@ int main()
 	// 探索済みの単語列
 	Boxa* searched_boxes = boxaCreate(100);
 
-	// 未探索の単語列
-	Boxa* unvisit_boxes = boxaCreate(100);
-	set_difference(valid_boxes,leading_boxes,unvisit_boxes);
-	for (int i = 0; i < unvisit_boxes->n; i++){
-		BOX* box = boxaGetBox(unvisit_boxes, i, L_CLONE);
+	for (int i = 0; i < valid_boxes->n; i++){
+		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
 		printf("box[%d]=(%3d,%3d)\n", i, box->x, box->y);
 	}
-
 
 	BOX* st_point = boxCreate(0, 0, 0, 0);; //一つ目の単語
 	BOX* ed_point = boxCreate(0, 0, 0, 0);; //二つ目の単語
@@ -166,14 +138,12 @@ int main()
 	// 初期値を設定
 	st_point = boxaGetBox(leading_boxes, lbox_cnt, L_CLONE);
 	printf("init : st_point=(%3d,%3d)\n", st_point->x, st_point->y);
-	//boxaAddBox(searched_boxes, st_point, L_CLONE);
 
 	while (lbox_cnt < leading_boxes->n){
 		min_x = 999;
-		set_difference(valid_boxes, searched_boxes, unvisit_boxes);
-		for (int j = 0; j < unvisit_boxes->n; j++){
-			ed_point = boxaGetBox(unvisit_boxes, j, L_CLONE);
-			printf(" st_point=(%3d,%3d),ed_point=(%3d,%3d)\n", st_point->x, st_point->y, ed_point->x, ed_point->y);
+		for (int j = 0; j < valid_boxes->n; j++){
+			ed_point = boxaGetBox(valid_boxes, j, L_CLONE);
+			//printf("st_point=(%3d,%3d),ed_point=(%3d,%3d)\n", st_point->x, st_point->y, ed_point->x, ed_point->y);
 			// 2つの単語の中心座標を取得し、そのベクトルを求める
 			vec = getVector(st_point, ed_point);
 
@@ -184,7 +154,7 @@ int main()
 
 			// cosθを求める , cosθ=内積/ (√ベクトルの大きさ1*√ベクトルの大きさ2)
 			vec_cos = getProduct(vec, base_vec) / (vec_size1 * vec_size2);
-			printf("vec_cos=%f\n", vec_cos);
+			//printf("vec_cos=%f\n", vec_cos);
 
 			// cosθが1/2(=30度から-30度)であれば右方向にあると判断する
 			if (vec_cos >= base_angle){
@@ -192,21 +162,22 @@ int main()
 				if (ed_point->x - st_point->x < min_x){
 					min_x = ed_point->x - st_point->x;
 					next_word = ed_point;
-					printf("lbox_cnt=%3d , j=%3d , min_x=%3d\n", lbox_cnt,j,min_x);
+					//printf("lbox_cnt=%3d , j=%3d , min_x=%3d\n", lbox_cnt,j,min_x);
 				}
 			}
 		}
-		// 上記の二つの条件を満たす単語を次の単語とする。そこから次の単語を探すため、同じ処理を行う。
-		st_point = next_word;
-		printf("Add : st_point=(%3d,%3d)\n", st_point->x, st_point->y);
-		// st_pointを探索済みの配列に代入する
-		boxaAddBox(searched_boxes, st_point, L_CLONE);
+
 		// 右方向に単語が見つからなくなれば次の行へ移動する
-		/*
-		if (st_point == ed_point){
+		if (min_x == 999){
 			printf("go to next row\n");
 			lbox_cnt++;
 		}
-		*/
+		else {
+			// 角度が30度から-30度の範囲にある、かつ最も近い(X座標が)単語を次の単語とする。そこから次の単語を探すため、同じ処理を行う。
+			st_point = next_word;
+			printf("Add : st_point=(%3d,%3d)\n", st_point->x, st_point->y);
+			// st_pointを探索済みの配列に代入する
+			boxaAddBox(searched_boxes, st_point, L_CLONE);
+		}
 	}
 }

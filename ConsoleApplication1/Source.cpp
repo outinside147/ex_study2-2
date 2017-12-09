@@ -16,6 +16,7 @@
 #include <opencv2/imgproc.hpp>
 
 #define PI  3.14159265358979323846
+#define MAX 9999
 
 using namespace cv;
 using namespace std;
@@ -140,7 +141,7 @@ int main()
 	printf("init : st_point=(%3d,%3d)\n", st_point->x, st_point->y);
 
 	while (lbox_cnt < leading_boxes->n){
-		min_x = 999;
+		min_x = MAX;
 		for (int j = 0; j < valid_boxes->n; j++){
 			ed_point = boxaGetBox(valid_boxes, j, L_CLONE);
 			//printf("st_point=(%3d,%3d),ed_point=(%3d,%3d)\n", st_point->x, st_point->y, ed_point->x, ed_point->y);
@@ -168,7 +169,7 @@ int main()
 		}
 
 		// 右方向に単語が見つからなくなれば次の行へ移動する
-		if (min_x == 999){
+		if (min_x == MAX){
 			printf("go to next row\n");
 			lbox_cnt++;
 		}

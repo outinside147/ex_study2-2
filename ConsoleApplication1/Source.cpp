@@ -21,7 +21,10 @@ using namespace cv;
 using namespace std;
 using namespace tesseract;
 
+typedef struct { double x, y;} Box_array;
+
 // boxがboxesの中にあればtrue、そうでなければfalseを返す
+/*
 bool set_member(BOX* box, Boxa* boxes){
 	int i = 0;
 	BOX* include_box = boxaGetBox(boxes, 0, L_CLONE);
@@ -29,6 +32,7 @@ bool set_member(BOX* box, Boxa* boxes){
 		i++;
 		include_box = boxaGetBox(boxes, i, L_CLONE);
 	}
+	printf("set_member : include_box = (%3d,%3d)\n", include_box->x, include_box->y);
 
 	if (include_box == box){
 		return true;
@@ -37,12 +41,36 @@ bool set_member(BOX* box, Boxa* boxes){
 		return false;
 	}
 }
+*/
+bool set_member(BOX* box, Boxa* boxes){
+	int flg = 0;
+	BOX* b_box = box;
+	BOX* include_box = boxaGetBox(boxes, 0, L_CLONE);
+	for (int i = 0; i < boxes->n; i++){
+		printf("box=(%3d,%3d,%3d,%3d) , in_box=(%3d,%3d,%3d,%3d)\n", b_box->x, b_box->y, b_box->w, b_box->h, include_box->x, include_box->y, include_box->w, include_box->h);
+		if (b_box == include_box){
+			printf("set_member : i=%3d\n", i);
+			flg = 1;
+			break;
+		}
+	}
+	printf("flg=%3d\n",flg);
+	if (flg = 1){
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
+
 
 // a_boxesの要素を一つずつ調べ、b_boxesの要素でないなら、c_boxesに加える
 void set_difference(Boxa* a_boxes, Boxa* b_boxes, Boxa* c_boxes){
 	int i, j;
 	for (i = 0, j = 0; i < a_boxes->n; i++){
 		BOX* include_abox = boxaGetBox(a_boxes, i, L_CLONE);
+		printf("set_difference : include_abox = (%3d,%3d)\n", include_abox->x, include_abox->y);
 		if (!set_member(include_abox, b_boxes)){
 			boxaAddBox(c_boxes, include_abox, L_CLONE);
 		}
@@ -50,115 +78,84 @@ void set_difference(Boxa* a_boxes, Boxa* b_boxes, Boxa* c_boxes){
 }
 
 // 単語の中心座標を求める
-BOX* getCenterPoint(BOX* box){
-	BOX* center_point = boxCreate(0,0,0,0);
-	center_point->x = box->x + (box->w / 2);
-	center_point->y = box->y + (box->h / 2);
+Box_array getCenterPoint(BOX* box){
+	Box_array center_point = { 0, 0 };
+	center_point.x = box->x + (box->w / 2);
+	center_point.y = box->y - (box->h / 2);
 	return center_point;
 }
 
 // 2つの単語の中心座標を取得し、そのベクトルを求める
-BOX* getVector(BOX* box1, BOX* box2){
-	BOX* vec = boxCreate(0, 0, 0, 0);
-	BOX* center1 = getCenterPoint(box1);
-	BOX* center2 = getCenterPoint(box2);
-	vec->x = center1->x - center2->x;
-	vec->y = center1->y - center2->y;
+Box_array getVector(BOX* box1, BOX* box2){
+	Box_array vec = {0,0};
+	Box_array st_center = getCenterPoint(box1);
+	Box_array ed_center = getCenterPoint(box2);
+	vec.x = ed_center.x - st_center.x;
+	vec.y = ed_center.y - st_center.y;
 	return vec;
 }
 
 // ベクトルの大きさを取得する　返り値は√(x^2 + y^2)
-double getVectorLength(BOX* box){
-	return sqrt((box->x * box->x) + (box->y * box->y));
+double getVectorLength(Box_array box){
+	return sqrt((box.x * box.x) + (box.y * box.y));
 }
 
 // 2つの単語の内積を求める
-double getProduct(BOX* box1, BOX* box2){
-	return (box1->x * box2->x) + (box1->y * box2->y);
+double getProduct(Box_array box, Box_array base_box){
+	return (box.x * base_box.x) + (box.y * base_box.y);
+}
+
+Box* create_box(int x, int y, int w, int h){
+	BOX* box = boxCreate(x, y, w, h);
+	return box;
 }
 
 int main()
 {
-	ofstream content("../image/component.txt");
-	ofstream vbox("../image/valid_boxes.txt");
-	ofstream un_vbox("../image/un_visit_boxes.txt");
-
-	Mat src = imread("../../../source_images/img1_3_2.jpg", 1);
-	Pix *image = pixRead("../../../source_images/img1_3_2.jpg");
-	Mat para_map = src.clone();
-	Mat mat_para_img;
-
-	TessBaseAPI *api = new TessBaseAPI();
-	api->Init(NULL, "eng");
-	api->SetImage(image);
-	Boxa* para_boxes = api->GetComponentImages(RIL_PARA, true, NULL, NULL); //段落
-
-	// 文書画像から段落を抽出する
-	for (int i = 0; i < para_boxes->n; i++) {
-		BOX* box = boxaGetBox(para_boxes, i, L_CLONE); //boxes->n .. number of box in ptr array
-		// 分割した範囲を書き出す
-		Rect rect(box->x, box->y, box->w, box->h);
-		Mat part_img(src, rect);
-		mat_para_img = part_img;
-		imwrite("../image/splitImages/para.png", part_img);
-	}
-
-	// 抜き出した段落画像をTesseractで認識させる
-	Mat pw_map = mat_para_img.clone();
-	Pix *para_img = pixRead("../image/splitImages/para.png");
-	TessBaseAPI *api2 = new TessBaseAPI();
-	api2->Init(NULL, "eng");
-	api2->SetImage(para_img);
-	Boxa* word_boxes = api2->GetComponentImages(RIL_WORD, true, NULL, NULL); //単語
-	for (int i = 0; i < word_boxes->n; i++){
-		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
-		/*
-		rectangle(pw_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		imwrite("../image/splitImages/map_word.png", pw_map);
-		*/
-	}
-
-	// 明らかに誤認識している単語を消去する
-	Boxa* valid_boxes = boxaCreate(word_boxes->n);
-	for (int i = 0; i < 50; i++) { //**30
-		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
-		if (box->h > 5 && box->w > 5){ // 閾値の調整が必要 **
-			boxaAddBox(valid_boxes, box, L_CLONE);
-			vbox << "box[" << i << "]= (" << box->x << "," << box->y << ")" << endl;
-		}
-	}
-
 	// 先頭単語列
-	Boxa* leading_boxes = boxaCreate(5);
-	Box* box1 = boxCreate(15, 19, 106, 33);
-	//Box* box2 = boxCreate(15, 61, 56, 27);
-	//Box* box3 = boxCreate(14, 96, 134, 36);
-	//Box* box4 = boxCreate(13, 138, 100, 28);
-	boxaAddBox(leading_boxes, box1, L_CLONE);
-	//boxaAddBox(leading_boxes, box2, L_CLONE);
-	//boxaAddBox(leading_boxes, box3, L_CLONE);
-	//boxaAddBox(leading_boxes, box4, L_CLONE);
+	Boxa* leading_boxes = boxaCreate(50);
+	BOX* lbox1 = create_box(0, 0, 2, 2);
+	boxaAddBox(leading_boxes, lbox1, L_CLONE);
+
+	Boxa* valid_boxes = boxaCreate(50);
+	BOX* vbox1 = create_box(0, 0, 2, 2);
+	BOX* vbox2 = create_box(2, 1, 2, 2);
+	BOX* vbox3 = create_box(2, 2, 2, 2);
+	BOX* vbox4 = create_box(2, 3, 2, 2);
+	BOX* vbox5 = create_box(4, 2, 2, 2);
+	BOX* vbox6 = create_box(4, 3, 2, 2);
+	BOX* vbox7 = create_box(6, 0, 2, 2);
+	BOX* vbox8 = create_box(6, 1, 2, 2);
+	BOX* vbox9 = create_box(6, 4, 2, 2);
+	boxaAddBox(valid_boxes, vbox1, L_CLONE);
+	boxaAddBox(valid_boxes, vbox2, L_CLONE);
+	boxaAddBox(valid_boxes, vbox3, L_CLONE);
+	boxaAddBox(valid_boxes, vbox4, L_CLONE);
+	boxaAddBox(valid_boxes, vbox5, L_CLONE);
+	boxaAddBox(valid_boxes, vbox6, L_CLONE);
+	boxaAddBox(valid_boxes, vbox7, L_CLONE);
+	boxaAddBox(valid_boxes, vbox8, L_CLONE);
+	boxaAddBox(valid_boxes, vbox9, L_CLONE);
 
 	// 探索済みの単語列
-	Boxa* searched_boxes = boxaCreate(800);
+	Boxa* searched_boxes = boxaCreate(100);
 
 	// 未探索の単語列
-	Boxa* unvisit_boxes = boxaCreate(800);
+	Boxa* unvisit_boxes = boxaCreate(100);
 	set_difference(valid_boxes,leading_boxes,unvisit_boxes);
 	for (int i = 0; i < unvisit_boxes->n; i++){
 		BOX* box = boxaGetBox(unvisit_boxes, i, L_CLONE);
-		un_vbox << "box[" << i << "]= (" << box->x << "," << box->y << ")" << endl;
+		printf("box[%d]=(%3d,%3d)\n", i, box->x, box->y);
 	}
 
 
 	BOX* st_point = boxCreate(0, 0, 0, 0);; //一つ目の単語
 	BOX* ed_point = boxCreate(0, 0, 0, 0);; //二つ目の単語
 	BOX* next_word = boxCreate(0, 0, 0, 0);; //次の単語
-	BOX* vec;	// 2つの単語を結ぶベクトル
-	BOX* base_vec = boxCreate(1, 0, 0, 0); // box2=(1,0) , X軸方向のベクトル
+	Box_array vec = { 0, 0 };	// 2つの単語を結ぶベクトル
+	Box_array base_vec = { 1, 0 }; // box2=(1,0) , X軸方向のベクトル
 	double vec_size1; // ベクトルの大きさ1
 	double vec_size2; // ベクトルの大きさ2
-	double product; // 2つのベクトルの内積
 	double vec_cos; // 2つのベクトルのなす角度
 
 	double base_angle = cos(30.0 * PI / 180.0); // 次の単語を同じ行と判定する基準角度
@@ -169,12 +166,14 @@ int main()
 	// 初期値を設定
 	st_point = boxaGetBox(leading_boxes, lbox_cnt, L_CLONE);
 	printf("init : st_point=(%3d,%3d)\n", st_point->x, st_point->y);
+	//boxaAddBox(searched_boxes, st_point, L_CLONE);
 
 	while (lbox_cnt < leading_boxes->n){
 		min_x = 999;
+		set_difference(valid_boxes, searched_boxes, unvisit_boxes);
 		for (int j = 0; j < unvisit_boxes->n; j++){
 			ed_point = boxaGetBox(unvisit_boxes, j, L_CLONE);
-			printf("ed_point=(%3d,%3d)\n", ed_point->x, ed_point->y);
+			printf(" st_point=(%3d,%3d),ed_point=(%3d,%3d)\n", st_point->x, st_point->y, ed_point->x, ed_point->y);
 			// 2つの単語の中心座標を取得し、そのベクトルを求める
 			vec = getVector(st_point, ed_point);
 
@@ -203,9 +202,11 @@ int main()
 		// st_pointを探索済みの配列に代入する
 		boxaAddBox(searched_boxes, st_point, L_CLONE);
 		// 右方向に単語が見つからなくなれば次の行へ移動する
+		/*
 		if (st_point == ed_point){
 			printf("go to next row\n");
 			lbox_cnt++;
 		}
+		*/
 	}
 }

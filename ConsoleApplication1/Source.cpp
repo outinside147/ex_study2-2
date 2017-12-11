@@ -16,7 +16,7 @@
 #include <opencv2/imgproc.hpp>
 
 #define PI  3.14159265358979323846
-#define MAX 9999
+#define MAX_X 9999
 
 using namespace cv;
 using namespace std;
@@ -72,7 +72,7 @@ Box_array getVector(BOX* box1, BOX* box2){
 	return vec;
 }
 
-// ベクトルの大きさを取得する　返り値は√(x^2 + y^2)
+// ベクトルの大きさを取得する。返り値は√(x^2 + y^2)
 double getVectorLength(Box_array box){
 	return sqrt((box.x * box.x) + (box.y * box.y));
 }
@@ -82,7 +82,7 @@ double getProduct(Box_array box, Box_array base_box){
 	return (box.x * base_box.x) + (box.y * base_box.y);
 }
 
-Box* create_box(int x, int y, int w, int h){
+BOX* create_box(int x, int y, int w, int h){
 	BOX* box = boxCreate(x, y, w, h);
 	return box;
 }
@@ -90,12 +90,13 @@ Box* create_box(int x, int y, int w, int h){
 int main()
 {
 	// 先頭単語列
-	Boxa* leading_boxes = boxaCreate(50);
-	BOX* lbox1 = create_box(0, 0, 2, 2);
+	Boxa* leading_boxes = boxaCreate(100);
+	BOX* lbox1 = create_box(0, 0, 2, 2); //1行目
+	BOX* lbox2 = create_box(0, 6, 2, 2); //2行目
 	boxaAddBox(leading_boxes, lbox1, L_CLONE);
-
-	Boxa* valid_boxes = boxaCreate(50);
-	BOX* vbox1 = create_box(0, 0, 2, 2);
+	boxaAddBox(leading_boxes, lbox2, L_CLONE);
+	Boxa* valid_boxes = boxaCreate(100);
+	BOX* vbox1 = create_box(0, 0, 2, 2); //1行目
 	BOX* vbox2 = create_box(2, 1, 2, 2);
 	BOX* vbox3 = create_box(2, 2, 2, 2);
 	BOX* vbox4 = create_box(2, 3, 2, 2);
@@ -104,6 +105,13 @@ int main()
 	BOX* vbox7 = create_box(6, 0, 2, 2);
 	BOX* vbox8 = create_box(6, 1, 2, 2);
 	BOX* vbox9 = create_box(6, 4, 2, 2);
+	BOX* vbox10 = create_box(0, 6, 2, 2); //2行目
+	BOX* vbox11 = create_box(2, 5, 2, 2);
+	BOX* vbox12 = create_box(2, 4, 2, 2);
+	BOX* vbox13 = create_box(4, 6, 2, 2);
+	BOX* vbox14 = create_box(4, 5, 2, 2);
+	BOX* vbox15 = create_box(6, 7, 2, 2);
+	BOX* vbox16 = create_box(6, 4, 2, 2);
 	boxaAddBox(valid_boxes, vbox1, L_CLONE);
 	boxaAddBox(valid_boxes, vbox2, L_CLONE);
 	boxaAddBox(valid_boxes, vbox3, L_CLONE);
@@ -113,6 +121,13 @@ int main()
 	boxaAddBox(valid_boxes, vbox7, L_CLONE);
 	boxaAddBox(valid_boxes, vbox8, L_CLONE);
 	boxaAddBox(valid_boxes, vbox9, L_CLONE);
+	boxaAddBox(valid_boxes, vbox10, L_CLONE);
+	boxaAddBox(valid_boxes, vbox11, L_CLONE);
+	boxaAddBox(valid_boxes, vbox12, L_CLONE);
+	boxaAddBox(valid_boxes, vbox13, L_CLONE);
+	boxaAddBox(valid_boxes, vbox14, L_CLONE);
+	boxaAddBox(valid_boxes, vbox15, L_CLONE);
+	boxaAddBox(valid_boxes, vbox16, L_CLONE);
 
 	// 探索済みの単語列
 	Boxa* searched_boxes = boxaCreate(100);
@@ -132,19 +147,18 @@ int main()
 	double vec_cos; // 2つのベクトルのなす角度
 
 	double base_angle = cos(30.0 * PI / 180.0); // 次の単語を同じ行と判定する基準角度
-	printf("base_angle=%f\n", base_angle);
+	//printf("base_angle=%f\n", base_angle);
 	int min_x;
 	int lbox_cnt = 0;
 
-	// 初期値を設定
 	st_point = boxaGetBox(leading_boxes, lbox_cnt, L_CLONE);
-	printf("init : st_point=(%3d,%3d)\n", st_point->x, st_point->y);
 
+	printf("leading_boxes->n=%d\n", leading_boxes->n);
 	while (lbox_cnt < leading_boxes->n){
-		min_x = MAX;
+		min_x = MAX_X;
 		for (int j = 0; j < valid_boxes->n; j++){
 			ed_point = boxaGetBox(valid_boxes, j, L_CLONE);
-			//printf("st_point=(%3d,%3d),ed_point=(%3d,%3d)\n", st_point->x, st_point->y, ed_point->x, ed_point->y);
+			printf("st_point=(%3d,%3d),ed_point=(%3d,%3d)\n", st_point->x, st_point->y, ed_point->x, ed_point->y);
 			// 2つの単語の中心座標を取得し、そのベクトルを求める
 			vec = getVector(st_point, ed_point);
 
@@ -169,9 +183,10 @@ int main()
 		}
 
 		// 右方向に単語が見つからなくなれば次の行へ移動する
-		if (min_x == MAX){
+		if (min_x == MAX_X){
 			printf("go to next row\n");
 			lbox_cnt++;
+			st_point = boxaGetBox(leading_boxes, lbox_cnt, L_CLONE);
 		}
 		else {
 			// 角度が30度から-30度の範囲にある、かつ最も近い(X座標が)単語を次の単語とする。そこから次の単語を探すため、同じ処理を行う。
@@ -181,4 +196,5 @@ int main()
 			boxaAddBox(searched_boxes, st_point, L_CLONE);
 		}
 	}
+	printf("exit a roop\n");
 }

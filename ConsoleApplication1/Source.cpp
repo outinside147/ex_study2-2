@@ -150,7 +150,7 @@ Boxa* setStartPosition(Boxa* boxes){
 	for (int i = 0; i < sort_yboxes->n; i++){
 		BOX* box = boxaGetBox(sort_yboxes, i, L_CLONE);
 		rectangle(word_map2, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 255, 0), 1, 4);
-		//imwrite("../image/splitImages/map_word_ysort.png", word_map2);
+		imwrite("../image/splitImages/map_word_ysort.png", word_map2);
 		sorty << "sorted_y[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 	}
 
@@ -160,6 +160,7 @@ Boxa* setStartPosition(Boxa* boxes){
 	while (rcnt < sort_yboxes->n){
 		BOX* cur_box = boxaGetBox(sort_yboxes, rcnt, L_CLONE);
 		int dif_y = cur_box->y - min_box->y;
+		//printf("cur_box=(%3d,%3d), dif_y=%3d, min_box=(%3d,%3d)\n", cur_box->x, cur_box->y, dif_y, min_box->x,min_box->y);
 		//単語の高さが30以上ある場合、先頭単語の配列に格納する
 		if (dif_y >= 30){
 			boxaAddBox(leading_boxes, min_box, L_CLONE);
@@ -173,13 +174,14 @@ Boxa* setStartPosition(Boxa* boxes){
 		}
 		rcnt++;
 	}
+	boxaAddBox(leading_boxes, min_box, L_CLONE);
 
 	// 抽出した先頭単語を出力する
 	for (int i = 0; i < leading_boxes->n; i++){
 		BOX* box = boxaGetBox(leading_boxes, i, L_CLONE);
 		lboxes << "leading_boxes[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 		rectangle(word_map3, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		//imwrite("../image/splitImages/map_word_leading.png", word_map3);
+		imwrite("../image/splitImages/map_word_leading.png", word_map3);
 	}
 	return leading_boxes;
 }
@@ -287,7 +289,7 @@ int main()
 	for (int i = 0; i < word_boxes->n; i++){
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
 		rectangle(pw_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		//imwrite("../image/splitImages/map_word.png", pw_map);
+		imwrite("../image/splitImages/map_word.png", pw_map);
 	}
 
 	Mat word_map1 = mat_para_img.clone();
@@ -301,7 +303,7 @@ int main()
 	Boxa* valid_boxes = boxaCreate(word_boxes->n);
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
-		if (box->h >= 5 && box->w >= 5){ // 閾値の調整が必要 **
+		if (box->h > 5 && box->w > 5){ // 閾値の調整が必要 **
 			boxaAddBox(valid_boxes, box, L_CLONE);
 		}
 	}
@@ -315,7 +317,7 @@ int main()
 		content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 		//outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
 		rectangle(word_map1, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		//imwrite("../image/splitImages/map_word_valid.png", word_map1);
+		imwrite("../image/splitImages/map_word_valid.png", word_map1);
 	}
 
 	// 全ての行の先頭単語を見つける , 入力=全単語列
@@ -339,11 +341,9 @@ int main()
 		Boxa* boxes = boxaaGetBoxa(sentence_boxas,i,L_CLONE);
 		for (int j = 0; j < boxes->n;j++){
 			BOX* box = boxaGetBox(boxes, j, L_CLONE);
-			/*
 			Rect rect(box->x, box->y, box->w, box->h);
 			Mat part_img(mat_para_img, rect);
 			imwrite("../image/splitImages/s_boxas_" + to_string(i) + "_" + to_string(j) + ".png", part_img);
-			*/
 			int ci = i % 4;
 			rectangle(word_map4, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), setColor(ci), 1, 4);
 			imwrite("../image/splitImages/map_sentence.png", word_map4);

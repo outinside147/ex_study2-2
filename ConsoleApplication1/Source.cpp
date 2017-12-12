@@ -56,14 +56,16 @@ bool setMember(BOX* box, Boxa* boxes){
 }
 
 // a_boxesの要素を一つずつ調べ、b_boxesの要素でないなら、c_boxesに加える
-void setDiff(Boxa* a_boxes, Boxa* b_boxes, Boxa* c_boxes){
+Boxa* setDiff(Boxa* a_boxes, Boxa* b_boxes){
 	int i, j;
+	Boxa* c_boxes = boxaCreate(a_boxes->n);
 	for (i = 0, j = 0; i < a_boxes->n; i++){
 		BOX* include_abox = boxaGetBox(a_boxes, i, L_CLONE);
 		if (!setMember(include_abox, b_boxes)){
 			boxaAddBox(c_boxes, include_abox, L_CLONE);
 		}
 	}
+	return c_boxes;
 }
 
 // 単語の中心座標を求める
@@ -149,9 +151,9 @@ Boxa* setStartPosition(Boxa* boxes){
 	sort_yboxes = boxaSort(sort_yboxes, L_SORT_BY_Y, L_SORT_INCREASING, NULL);
 	for (int i = 0; i < sort_yboxes->n; i++){
 		BOX* box = boxaGetBox(sort_yboxes, i, L_CLONE);
-		rectangle(word_map2, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 255, 0), 1, 4);
-		imwrite("../image/splitImages/map_word_ysort.png", word_map2);
-		sorty << "sorted_y[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+		//rectangle(word_map2, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 255, 0), 1, 4);
+		//imwrite("../image/splitImages/map_word_ysort.png", word_map2);
+		//sorty << "sorted_y[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 	}
 
 	int rcnt = 1;
@@ -192,9 +194,10 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 	Box* leading_box = l_box; //先頭単語
 	Boxa* valid_boxes = v_boxes; //全単語列
 	Boxa* line_boxes = boxaCreate(500); //探索済みの単語列
-	BOX* st_point = boxCreate(0, 0, 0, 0);; //一つ目の単語
-	BOX* ed_point = boxCreate(0, 0, 0, 0);; //二つ目の単語
-	BOX* next_word = boxCreate(0, 0, 0, 0);; //次の単語
+	Boxa* unvisit_boxes = boxaCreate(500); //未探索の単語列
+	BOX* st_point = boxCreate(0, 0, 0, 0); //一つ目の単語
+	BOX* ed_point = boxCreate(0, 0, 0, 0); //二つ目の単語
+	BOX* next_word = boxCreate(0, 0, 0, 0); //次の単語
 	Box_array vec = { 0, 0 };	//2つの単語を結ぶベクトル
 	Box_array base_vec = { 1, 0 }; //box2=(1,0) , X軸方向のベクトル
 
@@ -210,12 +213,14 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 	printf("init : st_point=(%3d,%3d)\n", st_point->x, st_point->y);
 	//先頭単語を探索済み配列に格納
 	boxaAddBox(line_boxes, st_point, L_CLONE);
+	unvisit_boxes = setDiff(valid_boxes, line_boxes);
+	valid_boxes = unvisit_boxes;
 
 	while (1){
 		min_x = MAX_X;
 		for (int j = 0; j < valid_boxes->n; j++){
 			ed_point = boxaGetBox(valid_boxes, j, L_CLONE);
-			//printf("st_point=(%3d,%3d),ed_point=(%3d,%3d)\n", st_point->x, st_point->y, ed_point->x, ed_point->y);
+			printf("st_point=(%3d,%3d),ed_point=(%3d,%3d)\n", st_point->x, st_point->y, ed_point->x, ed_point->y);
 			//2つの単語の中心座標を取得し、そのベクトルを求める
 			vec = getVector(st_point, ed_point);
 
@@ -234,12 +239,12 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 				if (ed_point->x - st_point->x < min_x){
 					min_x = ed_point->x - st_point->x;
 					next_word = ed_point;
-					//printf("lbox_cnt=%3d , j=%3d , min_x=%3d\n", lbox_cnt,j,min_x);
+					printf("lbox_cnt=%3d , j=%3d , min_x=%3d\n", lbox_cnt,j,min_x);
 				}
 			}
 		}
 
-		//右方向に単語が見つからなくなれば次の行へ移動する
+		//右方向に単語が見つからなくなればループを脱する
 		if (min_x == MAX_X){
 			printf("go to next row\n");
 			break;
@@ -248,11 +253,12 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 			//st_point = boxaGetBox(leading_boxes, lbox_cnt, L_CLONE);
 		}
 		else {
-			//次の単語を始点に設定する
-			st_point = next_word;
-			printf("Add : st_point=(%3d,%3d)\n", st_point->x, st_point->y);
+			//st_point = next_word;
+			printf("Add : next_word=(%3d,%3d)\n", next_word->x, next_word->y);
 			//st_pointを探索済みの配列に代入する
-			boxaAddBox(line_boxes, st_point, L_CLONE);
+			boxaAddBox(line_boxes, next_word, L_CLONE);
+			unvisit_boxes = setDiff(valid_boxes, line_boxes);
+			valid_boxes = unvisit_boxes;
 		}
 	}
 	printf("exit a roop\n");
@@ -288,8 +294,8 @@ int main()
 	Boxa* word_boxes = api2->GetComponentImages(RIL_WORD, true, NULL, NULL); //単語
 	for (int i = 0; i < word_boxes->n; i++){
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
-		rectangle(pw_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		imwrite("../image/splitImages/map_word.png", pw_map);
+		//rectangle(pw_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
+		//imwrite("../image/splitImages/map_word.png", pw_map);
 	}
 
 	Mat word_map1 = mat_para_img.clone();
@@ -300,7 +306,7 @@ int main()
 
 
 	// 明らかに誤認識している単語を消去する
-	Boxa* valid_boxes = boxaCreate(word_boxes->n);
+	Boxa* valid_boxes = boxaCreate(500); //**
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
 		if (box->h > 5 && box->w > 5){ // 閾値の調整が必要 **
@@ -316,8 +322,8 @@ int main()
 		int conf = api2->MeanTextConf();
 		content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 		//outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
-		rectangle(word_map1, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		imwrite("../image/splitImages/map_word_valid.png", word_map1);
+		//rectangle(word_map1, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
+		//imwrite("../image/splitImages/map_word_valid.png", word_map1);
 	}
 
 	// 全ての行の先頭単語を見つける , 入力=全単語列
@@ -329,7 +335,7 @@ int main()
 		//先頭単語から右方向に向かって次の単語を探す , 入力=先頭単語,全単語列
 		line_boxes = findFollowWord(box, valid_boxes);
 		// valid_boxesの要素を調べ、line_boxesの要素でないなら、searched_boxesに加える
-		setDiff(valid_boxes, line_boxes, searched_boxes);
+		searched_boxes = setDiff(valid_boxes, line_boxes);
 		valid_boxes = searched_boxes;
 		boxaaAddBoxa(sentence_boxas, line_boxes, L_CLONE);
 	}
@@ -341,9 +347,9 @@ int main()
 		Boxa* boxes = boxaaGetBoxa(sentence_boxas,i,L_CLONE);
 		for (int j = 0; j < boxes->n;j++){
 			BOX* box = boxaGetBox(boxes, j, L_CLONE);
-			Rect rect(box->x, box->y, box->w, box->h);
-			Mat part_img(mat_para_img, rect);
-			imwrite("../image/splitImages/s_boxas_" + to_string(i) + "_" + to_string(j) + ".png", part_img);
+			//Rect rect(box->x, box->y, box->w, box->h);
+			//Mat part_img(mat_para_img, rect);
+			//imwrite("../image/splitImages/s_boxas_" + to_string(i) + "_" + to_string(j) + ".png", part_img);
 			int ci = i % 4;
 			rectangle(word_map4, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), setColor(ci), 1, 4);
 			imwrite("../image/splitImages/map_sentence.png", word_map4);

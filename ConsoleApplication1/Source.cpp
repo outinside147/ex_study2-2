@@ -122,7 +122,7 @@ Scalar setColor(int ci){
 	return color;
 }
 
-// 最頻値を求める , 入力=全単語列(valid_boxes)
+// 最頻値を求める , 入力=全単語列(valid_boxes) **編集
 void findMode(Boxa* boxes){
 	int class_num = ceil(1+log2((double)boxes->n)); //階級の数 スタージェスの公式: class_num = 1+log2n ceil=小数点の切り上げ
 	Boxa* sort_asc = boxaSort(boxes, L_SORT_BY_HEIGHT, L_SORT_INCREASING, NULL); //昇順ソート
@@ -133,12 +133,13 @@ void findMode(Boxa* boxes){
 
 	printf("class_num=%3d, max_h=%3d, min_h=%3d, distribution=%1.3lf\n", class_num,max_h,min_h,dstrb);
 
-	double rank = 0;
+	int rank = 0;
 	vector<int> hist(class_num);
 	for (int i = 0; i < boxes->n; i++){
 		BOX* box = boxaGetBox(boxes, i, L_CLONE);
-		rank = (double)box->h / dstrb;
-		if (0 <= rank && rank < (double)class_num){
+		rank = box->h / dstrb;
+		printf("rank=%d\n", rank);
+		if (0 <= rank && rank < class_num){
 			hist[rank]++;
 		}
 	}

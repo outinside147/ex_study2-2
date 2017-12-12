@@ -70,7 +70,7 @@ void setDiff(Boxa* a_boxes, Boxa* b_boxes, Boxa* c_boxes){
 Box_array getCenterPoint(BOX* box){
 	Box_array center_point = { 0, 0 };
 	center_point.x = box->x + (box->w / 2);
-	center_point.y = box->y - (box->h / 2);
+	center_point.y = box->y + (box->h / 2);
 	return center_point;
 }
 
@@ -204,6 +204,7 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 	double vec_size2; //ベクトルの大きさ2
 	double vec_cos; //2つのベクトルのなす角度
 	double base_angle = cos(20.0 * PI / 180.0); // 次の単語を同じ行と判定する基準角度
+	printf("base_angle=%f\n", base_angle);
 
 	//探索を始める初期値を設定
 	st_point = leading_box;
@@ -234,7 +235,11 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 				if (ed_point->x - st_point->x < min_x){
 					min_x = ed_point->x - st_point->x;
 					next_word = ed_point;
-					//printf("lbox_cnt=%3d , j=%3d , min_x=%3d\n", lbox_cnt,j,min_x);
+					printf("st_point=(%3d,%3d,%3d,%3d),ed_point=(%3d,%3d,%3d,%3d), min_x=%3d ,vec_cos=%lf\n", st_point->x, st_point->y, st_point->w, st_point->h, ed_point->x, ed_point->y, ed_point->w, ed_point->h, min_x, vec_cos);
+					Box_array stc = getCenterPoint(st_point);
+					Box_array edc = getCenterPoint(ed_point);
+					printf("st_center=(%lf,%lf) , ed_center=(%lf,%lf)\n", stc.x, stc.y, edc.x, edc.y);
+					//printf("j=%3d , min_x=%3d\n", lbox_cnt,j,min_x);
 				}
 			}
 		}
@@ -347,7 +352,6 @@ int main()
 			int ci = i % 4;
 			rectangle(word_map4, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), setColor(ci), 1, 4);
 			imwrite("../image/splitImages/map_sentence.png", word_map4);
-			//
 			s_boxas << "sentence_boxas[" << i << "][" << j << "],x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 		}
 	}

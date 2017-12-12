@@ -55,15 +55,17 @@ bool setMember(BOX* box, Boxa* boxes){
 	}
 }
 
-// a_boxesの要素を一つずつ調べ、b_boxesの要素でないなら、c_boxesに加える
-void setDiff(Boxa* a_boxes, Boxa* b_boxes, Boxa* c_boxes){
+// a_boxesの要素を一つずつ調べ、b_boxesの要素でないなら、c_boxesに加える。これを返り値として返す
+Boxa* setDiff(Boxa* a_boxes, Boxa* b_boxes){
 	int i, j;
+	Boxa* c_boxes = boxaCreate(a_boxes->n);
 	for (i = 0, j = 0; i < a_boxes->n; i++){
 		BOX* include_abox = boxaGetBox(a_boxes, i, L_CLONE);
 		if (!setMember(include_abox, b_boxes)){
 			boxaAddBox(c_boxes, include_abox, L_CLONE);
 		}
 	}
+	return c_boxes;
 }
 
 // 単語の中心座標を求める
@@ -227,7 +229,6 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 
 			//cosθを求める , cosθ=内積/ (√ベクトルの大きさ1*√ベクトルの大きさ2)
 			vec_cos = getProduct(vec, base_vec) / (vec_size1 * vec_size2);
-			//printf("vec_cos=%f\n", vec_cos);
 
 			//cosθが1/2(=30度から-30度)であれば右方向にあると判断する
 			if (vec_cos >= base_angle){
@@ -235,11 +236,10 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 				if (ed_point->x - st_point->x < min_x){
 					min_x = ed_point->x - st_point->x;
 					next_word = ed_point;
-					printf("st_point=(%3d,%3d,%3d,%3d),ed_point=(%3d,%3d,%3d,%3d), min_x=%3d ,vec_cos=%lf\n", st_point->x, st_point->y, st_point->w, st_point->h, ed_point->x, ed_point->y, ed_point->w, ed_point->h, min_x, vec_cos);
 					Box_array stc = getCenterPoint(st_point);
 					Box_array edc = getCenterPoint(ed_point);
-					printf("st_center=(%lf,%lf) , ed_center=(%lf,%lf)\n", stc.x, stc.y, edc.x, edc.y);
-					//printf("j=%3d , min_x=%3d\n", lbox_cnt,j,min_x);
+					//printf("st_point=(%3d,%3d,%3d,%3d),ed_point=(%3d,%3d,%3d,%3d), min_x=%3d ,vec_cos=%lf\n", st_point->x, st_point->y, st_point->w, st_point->h, ed_point->x, ed_point->y, ed_point->w, ed_point->h, min_x, vec_cos);
+					//printf("st_center=(%lf,%lf) , ed_center=(%lf,%lf)\n", stc.x, stc.y, edc.x, edc.y);
 				}
 			}
 		}
@@ -248,9 +248,6 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 		if (min_x == MAX_X){
 			printf("go to next row\n");
 			break;
-			//lbox_cnt++;
-			//次の先頭文字を始点に設定
-			//st_point = boxaGetBox(leading_boxes, lbox_cnt, L_CLONE);
 		}
 		else {
 			//次の単語を始点に設定する
@@ -333,10 +330,9 @@ int main()
 		Boxa* searched_boxes = boxaCreate(500);
 		//先頭単語から右方向に向かって次の単語を探す , 入力=先頭単語,全単語列
 		line_boxes = findFollowWord(box, valid_boxes);
-		// valid_boxesの要素を調べ、line_boxesの要素でないなら、searched_boxesに加える
-		setDiff(valid_boxes, line_boxes, searched_boxes);
-		valid_boxes = searched_boxes;
 		boxaaAddBoxa(sentence_boxas, line_boxes, L_CLONE);
+		//valid_boxesからline_boxesの要素を取り除いて返す。これを次の探索対象とする
+		valid_boxes = setDiff(valid_boxes, line_boxes);
 	}
 
 	printf("sentence_boxas->n=%3d\n", sentence_boxas->n);

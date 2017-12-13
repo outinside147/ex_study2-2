@@ -133,6 +133,7 @@ Boxa* setStartPosition(Boxa* boxes){
 	Boxa* sort_yboxes = boxaCreate(100);
 	Boxa* leading_boxes = boxaCreate(100);
 
+	Mat xsort_map = mat_para_img.clone();
 	Mat ysort_map = mat_para_img.clone();
 	Mat leading_map = mat_para_img.clone();
 
@@ -140,7 +141,9 @@ Boxa* setStartPosition(Boxa* boxes){
 	sort_xboxes = boxaSort(boxes, L_SORT_BY_X, L_SORT_INCREASING, NULL);
 	for (int i = 0; i < sort_xboxes->n; i++){
 		BOX* box = boxaGetBox(sort_xboxes, i, L_CLONE);
-		//sortx << "sorted_x[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+		sortx << "sorted_x[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+		rectangle(xsort_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 255, 0), 1, 4);
+		imwrite("../image/splitImages/map_word_xsort.png", xsort_map);
 	}
 
 	//ソートした配列の先頭から100個の単語を行の先頭候補として別の配列に格納する
@@ -202,11 +205,11 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 	Box_array vec = { 0, 0 };	//2つの単語を結ぶベクトル
 	Box_array base_vec = { 1, 0 }; //box2=(1,0) , X軸方向のベクトル
 
-	double min_x;
-	double vec_size1; //ベクトルの大きさ1
-	double vec_size2; //ベクトルの大きさ2
-	double vec_cos; //2つのベクトルのなす角度
-	double base_angle = cos(20.0 * PI / 180.0); // 次の単語を同じ行と判定する基準角度
+	double min_x = 0;
+	double vec_size1 = 0; //ベクトルの大きさ1
+	double vec_size2 = 0; //ベクトルの大きさ2
+	double vec_cos = 0; //2つのベクトルのなす角度
+	double base_angle = cos(10.0 * PI / 180.0); // 次の単語を同じ行と判定する基準角度
 	printf("base_angle=%f\n", base_angle);
 
 	//探索を始める初期値を設定
@@ -240,7 +243,7 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 					min_x = ed_center.x - st_center.x;
 					next_word = ed_point;
 					//printf("st_point=(%3d,%3d,%3d,%3d),ed_point=(%3d,%3d,%3d,%3d), min_x=%3d ,vec_cos=%lf\n", st_point->x, st_point->y, st_point->w, st_point->h, ed_point->x, ed_point->y, ed_point->w, ed_point->h, min_x, vec_cos);
-					//printf("st_center=(%lf,%lf) , ed_center=(%lf,%lf)\n", stc.x, stc.y, edc.x, edc.y);
+					//printf("st_center=(%lf,%lf) , ed_center=(%lf,%lf)\n", st_center.x, st_center.y, ed_center.x, ed_center.y);
 				}
 			}
 		}
@@ -331,7 +334,7 @@ int main()
 		//先頭単語から右方向に向かって次の単語を探す , 入力=先頭単語,全単語列
 		line_boxes = findFollowWord(box, valid_boxes);
 		boxaaAddBoxa(sentence_boxas, line_boxes, L_CLONE);
-		//valid_boxesからline_boxesの要素を取り除いて返す。これを次の探索対象とする
+		//valid_boxesからline_boxesの要素を取り除いて返す。これを次の探索対象とする , 重複フラグ
 		//valid_boxes = setDiff(valid_boxes, line_boxes);
 	}
 

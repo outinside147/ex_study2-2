@@ -116,15 +116,15 @@ Scalar setColor(int ci){
 		color = Scalar(0, 0, 255); //レッド
 		break;
 	case 3:
-		color = Scalar(255, 0, 255); //マゼンタs
+		color = Scalar(255, 0, 255); //マゼンタ
 		break;
 	}
 	return color;
 }
 
-// 最頻値を求める , 入力=全単語列(valid_boxes) **編集
-void findMode(Boxa* boxes){
-	int class_num = ceil(1+log2((double)boxes->n)); //階級の数 スタージェスの公式: class_num = 1+log2n ceil=小数点の切り上げ
+// 最頻値を求める , 入力=全単語列(valid_boxes)
+vector<int> findMode(Boxa* boxes){
+	int class_num = (int)(ceil(1+log2((double)boxes->n))); //階級の数 スタージェスの公式: class_num = 1+log2n ceil=小数点の切り上げ
 	Boxa* sort_asc = boxaSort(boxes, L_SORT_BY_HEIGHT, L_SORT_INCREASING, NULL); //昇順ソート
 	Boxa* sort_desc = boxaSort(boxes, L_SORT_BY_HEIGHT, L_SORT_DECREASING, NULL); //降順ソート
 	int min_h = boxaGetBox(sort_asc, 0, L_CLONE)->h; //高さの最低値を取得する
@@ -137,8 +137,8 @@ void findMode(Boxa* boxes){
 	vector<int> hist(class_num);
 	for (int i = 0; i < boxes->n; i++){
 		BOX* box = boxaGetBox(boxes, i, L_CLONE);
-		rank = box->h / dstrb;
-		printf("rank=%d\n", rank);
+		rank = (int)(box->h / dstrb);
+		//printf("rank=%d\n", rank);
 		if (0 <= rank && rank < class_num){
 			hist[rank]++;
 		}
@@ -148,12 +148,60 @@ void findMode(Boxa* boxes){
 		printf("\n%lf-%lf : %3d人", double((i*dstrb) + 0.1), double((i + 1)*dstrb), hist.at(i));
 	}
 	printf("\n");
+	return hist;
+}
+
+// 行間を見つける
+void findLineSpacing(Mat pro_img,Mat l_img,int num){ //入力= 投影画像(Mat),単語画像(Mat)
+	int up_edge = 0;
+	int bt_edge = 0;
+	Mat map = l_img.clone();
+
+	for (int i = 0; i < pro_img.size().height; i++){
+		if (pro_img.at<int>(i, 0) == l_img.size().width){ //i行0列の値が単語画像の幅と同じであれば
+			if(up_edge == 0) up_edge = i; //行間の上端を取得
+			bt_edge = i; //行間の下端を取得
+		}
+	}
+	printf("up_edge=%d, bt_edge=%d\n", up_edge, bt_edge);
+	//上端から文字を囲う
+	rectangle(map, Point(0, 0), Point(l_img.size().width, up_edge), Scalar(0, 0, 255), 1, 1);
+	//下端から文字を囲う
+	rectangle(map, Point(0, bt_edge), Point(l_img.size().width, l_img.size().height), Scalar(255, 0, 0), 1, 1);
+	imwrite("../image/wrong_images/long_images/map_linespace_" + to_string(num) + ".png", map);
+}
+
+// 縦長の画像を分割する
+void divideImage(Boxa* boxes,Mat img){
+	ofstream pjt("../image/wrong_images/long_images/projection.txt");
+	ofstream lng("../image/wrong_images/long_images/long.txt");
+	ofstream gry("../image/wrong_images/long_images/gry.txt");
+
+	Mat gray_img; //グレースケール画像
+	Mat bn_img; //二値化画像
+
+	cvtColor(img,gray_img,CV_RGB2GRAY); //元画像をグレースケール画像に変更する
+	//gry << "gray_img.width=" << gray_img.size().width << ", gray_img.height=" << gray_img.size().height << ", gray_img=" << endl << gray_img << endl;
+	threshold(gray_img, bn_img, 0, 1, THRESH_BINARY | THRESH_OTSU); //大津の方法で二値化する
+	//imwrite("../image/wrong_images/long_images/bn_image.png", bn_img);
+
+	for (int i = 0; i < boxes->n; i++){
+		BOX* box = boxaGetBox(boxes, i, L_CLONE);
+		Rect rect(box->x, box->y, box->w, box->h);
+		Mat long_img(bn_img, rect);
+		lng << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", long_img=" << endl << long_img << endl;
+		Mat project_img; //投影結果
+		//imwrite("../image/wrong_images/long_images/long_" + to_string(i) + ".png", long_img);
+		reduce(long_img, project_img, 1, CV_REDUCE_SUM, CV_32S); //列ごとの合計を求める,出力はint型
+		pjt << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", project_img=" << endl << project_img << endl;
+		findLineSpacing(project_img, long_img,i);
+	}
 }
 
 int main()
 {	
 	ofstream content("../image/component.txt");
-	
+
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
 	api->SetImage(image);
@@ -184,13 +232,19 @@ int main()
 	}
 
 	Mat valid_map = mat_para_img.clone();
+	Mat long_map = mat_para_img.clone();
 
 	// 明らかに誤認識している単語を消去する
 	Boxa* valid_boxes = boxaCreate(word_boxes->n);
+	Boxa* long_boxes = boxaCreate(word_boxes->n);
+
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
 		if (box->h > 5 && box->w > 5){ // 閾値の調整が必要 **
 			boxaAddBox(valid_boxes, box, L_CLONE);
+			if (box->h > 50){
+				boxaAddBox(long_boxes, box, L_CLONE); //縦長の検出枠を格納する
+			}
 		}
 	}
 
@@ -201,10 +255,32 @@ int main()
 		char* ocrResult = api2->GetUTF8Text();
 		int conf = api2->MeanTextConf();
 		content << i << "," << box->x << "," << box->y << "," << box->w << "," << box->h << endl;
-		//outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
-		//rectangle(valid_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		//imwrite("../image/splitImages/map_word_valid.png", valid_map);
+		outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
+		rectangle(valid_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
+		imwrite("../image/splitImages/map_word_valid.png", valid_map);
 	}
 
-	findMode(valid_boxes);
+	/*
+	// 縦に長い認識枠を書き出す
+	for (int i = 0; i < long_boxes->n; i++){
+		BOX* box = boxaGetBox(long_boxes, i, L_CLONE);
+		outputPartImage(box, "../image/wrong_images/long_word_", mat_para_img, i);
+		rectangle(long_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
+		imwrite("../image/splitImages/map_word_long.png", long_map);
+	}
+	*/
+
+	divideImage(long_boxes, mat_para_img);
+
+	vector<int> hist_array;
+	int max = 0;
+	int max_i = 0;
+	hist_array = findMode(valid_boxes);
+	for (size_t i = 0; i < hist_array.size(); i++){
+		if (hist_array.at(i) > max){
+			max = hist_array.at(i);
+			max_i = i;
+		}
+	}
+	printf("i=%d, max=%d\n", max_i,max);
 }

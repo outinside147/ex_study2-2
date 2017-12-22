@@ -316,7 +316,6 @@ int main()
 	for (int i = 0; i < valid_boxes->n; i++) {
 		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
 		if (box->h > two_row_length){
-			boxaRemoveBox(valid_boxes, i); //全単語列から排除
 			boxaAddBox(long_boxes, box, L_CLONE); //別の配列に格納
 		}
 	}
@@ -324,11 +323,17 @@ int main()
 	//縦長の画像を分割する
 	div_boxes = divideImage(long_boxes, mat_para_img);
 
-	tgt_boxes = valid_boxes; //全単語列
 	//分割後の画像を全単語列に格納する
 	for (int i = 0; i < div_boxes->n; i++){
 		BOX* box = boxaGetBox(div_boxes, i, L_CLONE);
 		boxaAddBox(tgt_boxes, box, L_CLONE);
+	}
+
+	for (int i = 0; i < valid_boxes->n; i++){
+		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
+		if (box->h < two_row_length){
+			boxaAddBox(tgt_boxes, box, L_CLONE);
+		}
 	}
 
 	Mat all_map = mat_para_img.clone();

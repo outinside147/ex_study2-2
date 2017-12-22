@@ -174,7 +174,8 @@ double findMode(Boxa* boxes){
 	rank_max = (max_i + 1)*dstrb; //上限
 	line_h = (rank_min + rank_max) / 2; //上限と下限の平均をとる
 	printf("rank : min=%lf, max=%lf, line_h=%lf\n", rank_min, rank_max, line_h);
-	return line_h*2.5; //一行の高さの2.5倍(二行の高さ)を返り値とする。
+	printf("return value = %lf\n", line_h * 2);
+	return line_h*2; //一行の高さの2.5倍(二行の高さ)を返り値とする。
 }
 
 // 行間を見つける
@@ -197,18 +198,14 @@ Bet_lines findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画
 
 	//上端から文字を囲う
 	rectangle(map, Point(0, 0), Point(word_img.size().width, up_edge), Scalar(0, 0, 255), 1, 1);
-	/*
 	Rect up_rect(Point(0, 0), Point(word_img.size().width, up_edge));
 	Mat up_img(word_img, up_rect);
 	imwrite("../image/long_images/up_images/up_img_" + to_string(num) + ".png", up_img);
-	*/
 	//下端から文字を囲う
 	rectangle(map, Point(0, bt_edge), Point(word_img.size().width, word_img.size().height), Scalar(0, 0, 255), 1, 1);
-	/*
 	Rect bt_rect(Point(0, bt_edge), Point(word_img.size().width, word_img.size().height));
 	Mat bt_img(word_img, bt_rect);
 	imwrite("../image/long_images/bt_images/bt_img_" + to_string(num) + ".png", bt_img);
-	*/
 	//結果をファイルへ出力
 	fls << "i=" << num << endl;
 	fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << ")" << endl;
@@ -220,18 +217,18 @@ Bet_lines findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画
 }
 
 // 縦長の画像を分割する
-void divideImage(Boxa* boxes,Mat img){
+Boxa* divideImage(Boxa* boxes,Mat img){
 	ofstream pjt("../image/long_images/projection.txt");
 	ofstream lng("../image/long_images/long.txt");
-	//ofstream test("../image/long_images/test.txt");
 
-	Mat test = img.clone();
 	Mat gray_img; //グレースケール画像
 	Mat bn_img; //二値化画像
 
+	Boxa* edge_box = boxaCreate(100); //分割した抽出枠を格納する配列
+
 	cvtColor(img,gray_img,CV_RGB2GRAY); //元画像をグレースケール画像に変更する
 	threshold(gray_img, bn_img, 0, 255, THRESH_BINARY | THRESH_OTSU); //大津の方法で二値化する
-	//imwrite("../image/long_images/bn_image.png", bn_img);
+	imwrite("../image/long_images/bn_image.png", bn_img);
 
 	for (int i = 0; i < boxes->n; i++){
 		BOX* box = boxaGetBox(boxes, i, L_CLONE);
@@ -242,16 +239,11 @@ void divideImage(Boxa* boxes,Mat img){
 		pjt << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", project_img=" << endl << project_img/255 << endl;
 		Bet_lines edge = findLineSpacing(project_img, long_img,i);
 		BOX* up_box = boxCreate(box->x, box->y, box->w, edge.up);
-		BOX* bt_box = boxCreate(box->x, box->y + edge.bt, box->w, box->h - edge.bt);
-		//test << "up= (" << box->x << "," << box->y << "," << box->w << "," << edge.up << ")" << endl;
-		//test << "bt= (" << box->x << "," << box->y + edge.bt << "," << box->w << "," << box->h - edge.bt << ")" << endl << endl;
-		
-		rectangle(test, Point(up_box->x, up_box->y), Point(up_box->x+up_box->w, up_box->y+up_box->h), Scalar(0, 0, 255), 1, 1);
-		rectangle(test, Point(bt_box->x, bt_box->y), Point(bt_box->x + bt_box->w, bt_box->y + bt_box->h), Scalar(255, 0, 0), 1, 1);
-		imwrite("../image/long_images/test_img.png", test);
-		Boxa* edge_box = boxaCreate(100);
-
+		BOX* bt_box = boxCreate(box->x, box->y + edge.bt, box->w, box->h - edge.bt);		
+		boxaAddBox(edge_box, up_box, L_CLONE);
+		boxaAddBox(edge_box, bt_box, L_CLONE);
 	}
+	return edge_box;
 }
 
 int main()
@@ -293,6 +285,8 @@ int main()
 	// 明らかに誤認識している単語を消去する
 	Boxa* valid_boxes = boxaCreate(word_boxes->n);
 	Boxa* long_boxes = boxaCreate(word_boxes->n);
+	Boxa* div_boxes = boxaCreate(word_boxes->n);
+	Boxa* tgt_boxes = boxaCreate(word_boxes->n*2);
 
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
@@ -322,11 +316,26 @@ int main()
 	for (int i = 0; i < valid_boxes->n; i++) {
 		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
 		if (box->h > two_row_length){
-			boxaAddBox(long_boxes, box, L_CLONE);
+			boxaRemoveBox(valid_boxes, i); //全単語列から排除
+			boxaAddBox(long_boxes, box, L_CLONE); //別の配列に格納
 		}
 	}
 
 	//縦長の画像を分割する
-	divideImage(long_boxes, mat_para_img);
+	div_boxes = divideImage(long_boxes, mat_para_img);
 
+	tgt_boxes = valid_boxes; //全単語列
+	//分割後の画像を全単語列に格納する
+	for (int i = 0; i < div_boxes->n; i++){
+		BOX* box = boxaGetBox(div_boxes, i, L_CLONE);
+		boxaAddBox(tgt_boxes, box, L_CLONE);
+	}
+
+	Mat all_map = mat_para_img.clone();
+	//全単語を出力する
+	for (int i = 0; i < tgt_boxes->n; i++){
+		BOX* box = boxaGetBox(tgt_boxes, i, L_CLONE);
+		rectangle(all_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 255), 1, 1);
+		imwrite("../image/all_map_word.png", all_map);
+	}
 }

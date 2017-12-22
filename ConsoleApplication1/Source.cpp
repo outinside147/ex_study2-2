@@ -175,32 +175,44 @@ double findMode(Boxa* boxes){
 }
 
 // 行間を見つける
-void findLineSpacing(Mat pro_img,Mat l_img,int num){ //入力= 投影画像(Mat),単語画像(Mat)
+void findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画像(Mat),単語画像(Mat)
 	int up_edge = 0;
 	int bt_edge = 0;
-	Mat map = l_img.clone();
+	Mat map = word_img.clone();
 
 	for (int i = 0; i < pro_img.size().height; i++){
-		if (pro_img.at<int>(i, 0)/255 == l_img.size().width){ //i行0列の値が単語画像の幅と同じであれば
+		if (pro_img.at<int>(i, 0)/255 == word_img.size().width){ //i行0列の値が単語画像の幅と同じであれば
 			if(up_edge == 0) up_edge = i; //行間の上端を取得
 			bt_edge = i; //行間の下端を取得
 		}
 	}
+	//行間の上端、下端が見つからなかった場合、単語を縦方向に2分割する
+	if (up_edge == 0 && bt_edge == 0){
+		up_edge = word_img.size().height / 2;
+		bt_edge = word_img.size().height / 2;
+	}
+
 	//上端から文字を囲う
-	rectangle(map, Point(0, 0), Point(l_img.size().width, up_edge), Scalar(0, 0, 255), 1, 1);
+	rectangle(map, Point(0, 0), Point(word_img.size().width, up_edge), Scalar(0, 0, 255), 1, 1);
+	Rect up_rect(Point(0, 0), Point(word_img.size().width, up_edge));
+	Mat up_img(word_img, up_rect);
+	imwrite("../image/long_images/upbt_images/up_img_" + to_string(num) + ".png", up_img);
 	//下端から文字を囲う
-	rectangle(map, Point(0, bt_edge), Point(l_img.size().width, l_img.size().height), Scalar(0, 0, 255), 1, 1);
+	rectangle(map, Point(0, bt_edge), Point(word_img.size().width, word_img.size().height), Scalar(0, 0, 255), 1, 1);
+	Rect bt_rect(Point(0, bt_edge), Point(word_img.size().width, word_img.size().height));
+	Mat bt_img(word_img, bt_rect);
+	imwrite("../image/long_images/upbt_images/bt_img_" + to_string(num) + ".png", bt_img);
+	//結果をファイルへ出力
 	fls << "i=" << num << endl;
-	fls << "up_box=(0, 0) -- (" << l_img.size().width << ", " << up_edge << ")" << endl;
-	fls << "bt_box=(0, " << bt_edge << ") -- (" << l_img.size().width << ", " << l_img.size().height << ")" << endl << endl;
-	//imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
+	fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << ")" << endl;
+	fls << "bt_box=(0, " << bt_edge << ") -- (" << word_img.size().width << ", " << word_img.size().height << ")" << endl << endl;
+	imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
 }
 
 // 縦長の画像を分割する
 void divideImage(Boxa* boxes,Mat img){
 	ofstream pjt("../image/long_images/projection.txt");
 	ofstream lng("../image/long_images/long.txt");
-	ofstream gry("../image/long_images/gry.txt");
 
 	Mat gray_img; //グレースケール画像
 	Mat bn_img; //二値化画像
@@ -213,9 +225,7 @@ void divideImage(Boxa* boxes,Mat img){
 		BOX* box = boxaGetBox(boxes, i, L_CLONE);
 		Rect rect(box->x, box->y, box->w, box->h);
 		Mat long_img(bn_img, rect);
-		lng << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", long_img=" << endl << long_img/255 << endl;
 		Mat project_img; //投影結果
-		//imwrite("../image/long_images/long_" + to_string(i) + ".png", long_img);
 		reduce(long_img, project_img, 1, CV_REDUCE_SUM, CV_32S); //列ごとの合計を求める,出力はint型
 		pjt << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", project_img=" << endl << project_img/255 << endl;
 		findLineSpacing(project_img, long_img,i);
@@ -266,9 +276,6 @@ int main()
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
 		if (box->h > 5 && box->w > 5){ // 閾値の調整が必要 **
 			boxaAddBox(valid_boxes, box, L_CLONE);
-			if (box->h > 50){
-				boxaAddBox(long_boxes, box, L_CLONE); //縦長の検出枠を格納する
-			}
 		}
 	}
 
@@ -281,14 +288,23 @@ int main()
 		content << i << "," << box->x << "," << box->y << "," << box->w << "," << box->h << endl;
 		outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
 		rectangle(valid_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		imwrite("../image/splitImages/map_word_valid.png", valid_map);
+		//imwrite("../image/splitImages/map_word_valid.png", valid_map);
 	}
 
-	divideImage(long_boxes, mat_para_img);
-
+	//二行の長さとする閾値を設定
 	double two_line_value = findMode(valid_boxes);
 	//最頻値とその場所を表示
 	printf("two_line_value=%lf\n", two_line_value);
 
+	//取得した閾値を使って、二行の長さの検出枠を抽出する
+	for (int i = 0; i < valid_boxes->n; i++) {
+		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
+		if (box->h > two_line_value){
+			boxaAddBox(long_boxes, box, L_CLONE);
+		}
+	}
+
+	//縦長の画像を分割する
+	divideImage(long_boxes, mat_para_img);
 
 }

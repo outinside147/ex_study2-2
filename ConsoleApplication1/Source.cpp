@@ -32,6 +32,9 @@ ofstream fls("../image/long_images/line_spacing.txt");
 // BOX型の中心点を格納する構造体
 typedef struct { double x, y;} Box_array;
 
+// 行間の上端と下端を格納する構造体
+typedef struct { int up, bt;} Bet_lines;
+
 // 結果を書きだす関数(map)
 void outputPartImage(BOX* box, string file_name, Mat image, int i){
 	Rect rect(box->x, box->y, box->w, box->h);
@@ -175,7 +178,7 @@ double findMode(Boxa* boxes){
 }
 
 // 行間を見つける
-void findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画像(Mat),単語画像(Mat)
+Bet_lines findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画像(Mat),単語画像(Mat)
 	int up_edge = 0;
 	int bt_edge = 0;
 	Mat map = word_img.clone();
@@ -194,26 +197,35 @@ void findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画像(M
 
 	//上端から文字を囲う
 	rectangle(map, Point(0, 0), Point(word_img.size().width, up_edge), Scalar(0, 0, 255), 1, 1);
+	/*
 	Rect up_rect(Point(0, 0), Point(word_img.size().width, up_edge));
 	Mat up_img(word_img, up_rect);
-	imwrite("../image/long_images/upbt_images/up_img_" + to_string(num) + ".png", up_img);
+	imwrite("../image/long_images/up_images/up_img_" + to_string(num) + ".png", up_img);
+	*/
 	//下端から文字を囲う
 	rectangle(map, Point(0, bt_edge), Point(word_img.size().width, word_img.size().height), Scalar(0, 0, 255), 1, 1);
+	/*
 	Rect bt_rect(Point(0, bt_edge), Point(word_img.size().width, word_img.size().height));
 	Mat bt_img(word_img, bt_rect);
-	imwrite("../image/long_images/upbt_images/bt_img_" + to_string(num) + ".png", bt_img);
+	imwrite("../image/long_images/bt_images/bt_img_" + to_string(num) + ".png", bt_img);
+	*/
 	//結果をファイルへ出力
 	fls << "i=" << num << endl;
 	fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << ")" << endl;
 	fls << "bt_box=(0, " << bt_edge << ") -- (" << word_img.size().width << ", " << word_img.size().height << ")" << endl << endl;
 	imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
+
+	Bet_lines edge = { up_edge, bt_edge };
+	return  edge;
 }
 
 // 縦長の画像を分割する
 void divideImage(Boxa* boxes,Mat img){
 	ofstream pjt("../image/long_images/projection.txt");
 	ofstream lng("../image/long_images/long.txt");
+	//ofstream test("../image/long_images/test.txt");
 
+	Mat test = img.clone();
 	Mat gray_img; //グレースケール画像
 	Mat bn_img; //二値化画像
 
@@ -228,7 +240,17 @@ void divideImage(Boxa* boxes,Mat img){
 		Mat project_img; //投影結果
 		reduce(long_img, project_img, 1, CV_REDUCE_SUM, CV_32S); //列ごとの合計を求める,出力はint型
 		pjt << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", project_img=" << endl << project_img/255 << endl;
-		findLineSpacing(project_img, long_img,i);
+		Bet_lines edge = findLineSpacing(project_img, long_img,i);
+		BOX* up_box = boxCreate(box->x, box->y, box->w, edge.up);
+		BOX* bt_box = boxCreate(box->x, box->y + edge.bt, box->w, box->h - edge.bt);
+		//test << "up= (" << box->x << "," << box->y << "," << box->w << "," << edge.up << ")" << endl;
+		//test << "bt= (" << box->x << "," << box->y + edge.bt << "," << box->w << "," << box->h - edge.bt << ")" << endl << endl;
+		
+		rectangle(test, Point(up_box->x, up_box->y), Point(up_box->x+up_box->w, up_box->y+up_box->h), Scalar(0, 0, 255), 1, 1);
+		rectangle(test, Point(bt_box->x, bt_box->y), Point(bt_box->x + bt_box->w, bt_box->y + bt_box->h), Scalar(255, 0, 0), 1, 1);
+		imwrite("../image/long_images/test_img.png", test);
+		Boxa* edge_box = boxaCreate(100);
+
 	}
 }
 
@@ -292,14 +314,14 @@ int main()
 	}
 
 	//二行の長さとする閾値を設定
-	double two_line_value = findMode(valid_boxes);
+	double two_row_length = findMode(valid_boxes);
 	//最頻値とその場所を表示
-	printf("two_line_value=%lf\n", two_line_value);
+	printf("two_row_length=%lf\n", two_row_length);
 
 	//取得した閾値を使って、二行の長さの検出枠を抽出する
 	for (int i = 0; i < valid_boxes->n; i++) {
 		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
-		if (box->h > two_line_value){
+		if (box->h > two_row_length){
 			boxaAddBox(long_boxes, box, L_CLONE);
 		}
 	}

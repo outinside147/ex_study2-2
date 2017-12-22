@@ -182,6 +182,8 @@ double findMode(Boxa* boxes){
 Bet_lines findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画像(Mat),単語画像(Mat)
 	int up_edge = 0;
 	int bt_edge = 0;
+	int max = 0;
+	int cnt = 0;
 	Mat map = word_img.clone();
 
 	for (int i = 0; i < pro_img.size().height; i++){
@@ -208,8 +210,8 @@ Bet_lines findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画
 	imwrite("../image/long_images/bt_images/bt_img_" + to_string(num) + ".png", bt_img);
 	//結果をファイルへ出力
 	fls << "i=" << num << endl;
-	fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << ")" << endl;
-	fls << "bt_box=(0, " << bt_edge << ") -- (" << word_img.size().width << ", " << word_img.size().height << ")" << endl << endl;
+	fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << "), up_box.h=" << up_edge << endl;
+	fls << "bt_box=(0, " << bt_edge << ") -- (" << word_img.size().width << ", " << word_img.size().height << "), bt_box.h=" << word_img.size().height - bt_edge << endl << endl;
 	imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
 
 	Bet_lines edge = { up_edge, bt_edge };
@@ -323,15 +325,17 @@ int main()
 	//縦長の画像を分割する
 	div_boxes = divideImage(long_boxes, mat_para_img);
 
-	//分割後の画像を全単語列に格納する
+	//分割後の画像を探索配列に格納する
 	for (int i = 0; i < div_boxes->n; i++){
 		BOX* box = boxaGetBox(div_boxes, i, L_CLONE);
-		boxaAddBox(tgt_boxes, box, L_CLONE);
+		if (box->h > 10){
+			boxaAddBox(tgt_boxes, box, L_CLONE);
+		}
 	}
 
 	for (int i = 0; i < valid_boxes->n; i++){
 		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
-		if (box->h < two_row_length){
+		if (box->h < two_row_length){ //分割前の単語(縦長の画像)を探索対象から外す
 			boxaAddBox(tgt_boxes, box, L_CLONE);
 		}
 	}
@@ -341,6 +345,6 @@ int main()
 	for (int i = 0; i < tgt_boxes->n; i++){
 		BOX* box = boxaGetBox(tgt_boxes, i, L_CLONE);
 		rectangle(all_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 255), 1, 1);
-		imwrite("../image/all_map_word.png", all_map);
+		imwrite("../image/long_images/all_map_word.png", all_map);
 	}
 }

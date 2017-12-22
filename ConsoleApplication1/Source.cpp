@@ -182,20 +182,35 @@ double findMode(Boxa* boxes){
 Bet_lines findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画像(Mat),単語画像(Mat)
 	int up_edge = 0;
 	int bt_edge = 0;
-	int max = 0;
-	int cnt = 0;
+	int max = 0; //空白行が連続している最大
+	int space_cnt = 0; //空白行をカウントする変数
+	int st_space = 0;
 	Mat map = word_img.clone();
 
+	printf("num=%d\n", num);
 	for (int i = 0; i < pro_img.size().height; i++){
 		if (pro_img.at<int>(i, 0)/255 == word_img.size().width){ //i行0列の値が単語画像の幅と同じであれば
-			if(up_edge == 0) up_edge = i; //行間の上端を取得
-			bt_edge = i; //行間の下端を取得
+			space_cnt++;
+			if (space_cnt > max){
+				max = space_cnt;
+				if(st_space == 0) st_space = i; //行間の上端を取得
+			}
+		}
+		else {
+			space_cnt = 0;
 		}
 	}
+	up_edge = st_space;
+	bt_edge = st_space + max;
+	printf("up_edge=%d, bt_edge=%d\n", up_edge, bt_edge);
+
 	//行間の上端、下端が見つからなかった場合、単語を縦方向に2分割する
 	if (up_edge == 0 && bt_edge == 0){
 		up_edge = word_img.size().height / 2;
 		bt_edge = word_img.size().height / 2;
+	}
+	else{
+		bt_edge--;
 	}
 
 	//上端から文字を囲う
@@ -215,6 +230,7 @@ Bet_lines findLineSpacing(Mat pro_img,Mat word_img,int num){ //入力= 投影画
 	imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
 
 	Bet_lines edge = { up_edge, bt_edge };
+	printf("return\n");
 	return  edge;
 }
 

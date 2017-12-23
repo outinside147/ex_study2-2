@@ -27,6 +27,8 @@ Mat src = imread("../../../source_images/img1_3_2.jpg", 1); //入力画像
 Pix *image = pixRead("../../../source_images/img1_3_2.jpg"); //入力画像(tesseract,leptonicaで使用する型)
 Mat para_map = src.clone();
 Mat mat_para_img; //抽出した段落画像
+ofstream fls("../image/long_images/line_spacing.txt");
+
 
 // BOX型の中心点を格納する構造体
 typedef struct { double x, y;} Box_array;
@@ -168,12 +170,12 @@ Boxa* setStartPosition(Boxa* boxes){
 		BOX* cur_box = boxaGetBox(sort_yboxes, rcnt, L_CLONE);
 		int dif_y = cur_box->y - min_box->y;
 		//printf("cur_box=(%3d,%3d), dif_y=%3d, min_box=(%3d,%3d)\n", cur_box->x, cur_box->y, dif_y, min_box->x,min_box->y);
-		//単語の高さが30以上ある場合、先頭単語の配列に格納する
+		//2つの単語間の長さが30以上ある場合、先頭単語の配列に格納する
 		if (dif_y >= 30){
 			boxaAddBox(leading_boxes, min_box, L_CLONE);
 			min_box = cur_box;
 		}
-		//単語の高さが30未満の場合、最もXが小さいものを取得する
+		//2つの単語間の長さが30未満の場合、最もXが小さいものを取得する
 		else if (dif_y < 30){
 			if (cur_box->x < min_box->x){
 				min_box = cur_box;
@@ -236,7 +238,7 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 			//cosθを求める , cosθ=内積/ (√ベクトルの大きさ1*√ベクトルの大きさ2)
 			vec_cos = getProduct(vec, base_vec) / (vec_size1 * vec_size2);
 
-			//cosθが1/2(=30度から-30度)であれば右方向にあると判断する
+			//cosθが1/2(=10度から-10度)であれば右方向にあると判断する
 			if (vec_cos >= base_angle){
 				//角度が30度から-30度の範囲にある、かつ最も近い(X座標が)単語を次の単語とする
 				if (ed_center.x - st_center.x < min_x){
@@ -248,7 +250,7 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 			}
 		}
 
-		//右方向に単語が見つからなくなれば次の行へ移動する
+		//右方向に単語が見つからなくなればループを脱する
 		if (min_x == MAX_X){
 			break;
 		}
@@ -261,6 +263,104 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 		}
 	}
 	return line_boxes;
+}
+
+// 最頻値を求める , 入力=全単語列(valid_boxes)
+double findMode(Boxa* boxes){
+	double class_num = ceil(1 + log2((double)boxes->n)); //階級の数 スタージェスの公式: class_num = 1+log2n round=最も近い整数値に丸める
+	Boxa* sort_asc = boxaSort(boxes, L_SORT_BY_HEIGHT, L_SORT_INCREASING, NULL); //昇順ソート
+	Boxa* sort_desc = boxaSort(boxes, L_SORT_BY_HEIGHT, L_SORT_DECREASING, NULL); //降順ソート
+	int min_h = 0;
+	min_h = boxaGetBox(sort_asc, 0, L_CLONE)->h; //高さの最低値を取得する
+	int max_h = 0;
+	max_h = boxaGetBox(sort_desc, 0, L_CLONE)->h; //高さの最高値を取得する
+	double dstrb = 0;
+	dstrb = double(max_h - min_h) / class_num; //分布の間隔
+
+	printf("boxes->n=%d, class_num=%3lf, max_h=%3d, min_h=%3d, distribution=%lf\n", boxes->n, class_num, max_h, min_h, dstrb);
+
+	double rank = 0;
+	vector<int> hist(class_num);
+	for (int i = 0; i < boxes->n; i++){
+		BOX* box = boxaGetBox(boxes, i, L_CLONE);
+		rank = floor(box->h / dstrb); //小数点以下切り捨て
+		//printf("%lf\n", rank);
+		if (0 <= rank && rank < class_num){
+			hist[rank]++;
+		}
+	}
+
+	/*
+	for (int i = 0; i < class_num; i++){
+	printf("\n%lf-%lf : %3d人", double((i*dstrb) + 0.1), double((i + 1)*dstrb), hist.at(i));
+	}
+	printf("\n");
+	*/
+
+	int max = 0;
+	int max_i = 0;
+	for (size_t i = 0; i < hist.size(); i++){
+		if (hist.at(i) > max){
+			max = hist.at(i);
+			max_i = i;
+		}
+	}
+
+	double line_h = 0; //一行の高さ
+	double rank_min, rank_max; //階級幅の上限と下限
+	rank_min = (max_i*dstrb) + 0.1; //下限
+	rank_max = (max_i + 1)*dstrb; //上限
+	line_h = (rank_min + rank_max) / 2; //上限と下限の平均をとる
+	printf("rank : min=%lf, max=%lf, line_h=%lf\n", rank_min, rank_max, line_h);
+	return line_h*2.5; //一行の高さの2.5倍(二行の高さ)を返り値とする。
+}
+
+// 行間を見つける
+void findLineSpacing(Mat pro_img, Mat l_img, int num){ //入力= 投影画像(Mat),単語画像(Mat)
+	int up_edge = 0;
+	int bt_edge = 0;
+	Mat map = l_img.clone();
+
+	for (int i = 0; i < pro_img.size().height; i++){
+		if (pro_img.at<int>(i, 0) / 255 == l_img.size().width){ //i行0列の値が単語画像の幅と同じであれば
+			if (up_edge == 0) up_edge = i; //行間の上端を取得
+			bt_edge = i; //行間の下端を取得
+		}
+	}
+	//上端から文字を囲う
+	rectangle(map, Point(0, 0), Point(l_img.size().width, up_edge), Scalar(0, 0, 255), 1, 1);
+	//下端から文字を囲う
+	rectangle(map, Point(0, bt_edge), Point(l_img.size().width, l_img.size().height), Scalar(0, 0, 255), 1, 1);
+	fls << "i=" << num << endl;
+	fls << "up_box=(0, 0) -- (" << l_img.size().width << ", " << up_edge << ")" << endl;
+	fls << "bt_box=(0, " << bt_edge << ") -- (" << l_img.size().width << ", " << l_img.size().height << ")" << endl << endl;
+	//imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
+}
+
+// 縦長の画像を分割する
+void divideImage(Boxa* boxes, Mat img){
+	ofstream pjt("../image/long_images/projection.txt");
+	ofstream lng("../image/long_images/long.txt");
+	ofstream gry("../image/long_images/gry.txt");
+
+	Mat gray_img; //グレースケール画像
+	Mat bn_img; //二値化画像
+
+	cvtColor(img, gray_img, CV_RGB2GRAY); //元画像をグレースケール画像に変更する
+	threshold(gray_img, bn_img, 0, 255, THRESH_BINARY | THRESH_OTSU); //大津の方法で二値化する
+	//imwrite("../image/long_images/bn_image.png", bn_img);
+
+	for (int i = 0; i < boxes->n; i++){
+		BOX* box = boxaGetBox(boxes, i, L_CLONE);
+		Rect rect(box->x, box->y, box->w, box->h);
+		Mat long_img(bn_img, rect);
+		lng << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", long_img=" << endl << long_img / 255 << endl;
+		Mat project_img; //投影結果
+		//imwrite("../image/long_images/long_" + to_string(i) + ".png", long_img);
+		reduce(long_img, project_img, 1, CV_REDUCE_SUM, CV_32S); //列ごとの合計を求める,出力はint型
+		pjt << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", project_img=" << endl << project_img / 255 << endl;
+		findLineSpacing(project_img, long_img, i);
+	}
 }
 
 int main()
@@ -292,23 +392,23 @@ int main()
 	Boxa* word_boxes = api2->GetComponentImages(RIL_WORD, true, NULL, NULL); //単語
 	for (int i = 0; i < word_boxes->n; i++){
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
-		rectangle(pw_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
+		rectangle(pw_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
 		imwrite("../image/splitImages/map_word.png", pw_map);
 	}
 
 	Mat valid_map = mat_para_img.clone();
 	Mat sentence_map = mat_para_img.clone();
+	Boxa* valid_boxes = boxaCreate(word_boxes->n); //小さな抽出枠を取り除いた単語列
+	Boxa* long_boxes = boxaCreate(word_boxes->n); //縦長の単語列
+	Boxa* target_boxes = boxaCreate(500); //valid_boxesと縦長の単語列を分割した単語列を合わせたもの
 	Boxa* leading_boxes = boxaCreate(100); //先頭単語列
 	Boxa* line_boxes = boxaCreate(100); //一行の単語列
 	Boxaa* sentence_boxas = boxaaCreate(100); //全行の単語列
 
-
 	// 明らかに誤認識している単語を消去する
-	Boxa* valid_boxes = boxaCreate(word_boxes->n);
 	for (int i = 0; i < word_boxes->n; i++) {
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
-		//if (box->h > 5 && box->w > 5){ // 閾値の調整が必要 **
-		if (box->h > 5 && box->w > 5 && box->h < 50){
+		if (box->h > 5 && box->w > 5){ //極端に小さい検出枠は除外
 			boxaAddBox(valid_boxes, box, L_CLONE);
 		}
 	}
@@ -323,6 +423,16 @@ int main()
 		rectangle(valid_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
 		imwrite("../image/splitImages/map_word_valid.png", valid_map);
 	}
+
+	// 二行に渡る抽出枠を縦方向に分割する
+	double two_row_length = findMode(valid_boxes); //二行の長さを設定
+	for (int i = 0; i < valid_boxes->n; i++) { //上記の値を使って、二行の長さの検出枠を抽出する
+		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
+		if (box->h > two_row_length){
+			boxaAddBox(long_boxes, box, L_CLONE);
+		}
+	}
+	divideImage(long_boxes, mat_para_img); //縦長の画像を分割する
 
 	// 全ての行の先頭単語を見つける , 入力=全単語列
 	leading_boxes = setStartPosition(valid_boxes);

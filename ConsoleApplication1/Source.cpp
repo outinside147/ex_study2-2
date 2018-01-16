@@ -101,12 +101,6 @@ double getProduct(Box_array box, Box_array base_box){
 	return (box.x * base_box.x) + (box.y * base_box.y);
 }
 
-// BOXを作成し、それを返り値として返す
-BOX* create_box(int x, int y, int w, int h){
-	BOX* box = boxCreate(x, y, w, h);
-	return box;
-}
-
 // 色の設定
 Scalar setColor(int ci){
 	Scalar color;
@@ -126,7 +120,6 @@ Scalar setColor(int ci){
 	}
 	return color;
 }
-
 
 // 全ての行の先頭単語を見つける
 Boxa* setStartPosition(Boxa* boxes){
@@ -160,8 +153,8 @@ Boxa* setStartPosition(Boxa* boxes){
 	for (int i = 0; i < sort_yboxes->n; i++){
 		BOX* box = boxaGetBox(sort_yboxes, i, L_CLONE);
 		rectangle(ysort_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 255, 0), 1, 4);
-		imwrite("../image/splitImages/map_word_ysort.png", ysort_map);
-		sorty << "sorted_y[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+		//imwrite("../image/splitImages/map_word_ysort.png", ysort_map);
+		//sorty << "sorted_y[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 	}
 
 	int rcnt = 1;
@@ -170,7 +163,6 @@ Boxa* setStartPosition(Boxa* boxes){
 	while (rcnt < sort_yboxes->n){
 		BOX* cur_box = boxaGetBox(sort_yboxes, rcnt, L_CLONE);
 		int dif_y = cur_box->y - min_box->y;
-		//printf("cur_box=(%3d,%3d), dif_y=%3d, min_box=(%3d,%3d)\n", cur_box->x, cur_box->y, dif_y, min_box->x,min_box->y);
 		//2つの単語間の長さが30以上ある場合、先頭単語の配列に格納する
 		if (dif_y >= 30){
 			boxaAddBox(leading_boxes, min_box, L_CLONE);
@@ -191,7 +183,7 @@ Boxa* setStartPosition(Boxa* boxes){
 		BOX* box = boxaGetBox(leading_boxes, i, L_CLONE);
 		lboxes << "leading_boxes[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 		rectangle(leading_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		imwrite("../image/splitImages/map_word_leading.png", leading_map);
+		//imwrite("../image/splitImages/map_word_leading.png", leading_map);
 	}
 	return leading_boxes;
 }
@@ -200,7 +192,7 @@ Boxa* setStartPosition(Boxa* boxes){
 // 行の先頭単語から右方向にある単語を探す
 Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 	Box* leading_box = l_box; //先頭単語
-	Boxa* valid_boxes = v_boxes; //全単語列
+	Boxa* all_boxes = v_boxes; //全単語列
 	Boxa* line_boxes = boxaCreate(500); //探索済みの単語列
 	BOX* st_point = boxCreate(0, 0, 0, 0);; //一つ目の単語
 	BOX* ed_point = boxCreate(0, 0, 0, 0);; //二つ目の単語
@@ -223,9 +215,8 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 
 	while (1){
 		min_x = MAX_X;
-		for (int j = 0; j < valid_boxes->n; j++){
-			ed_point = boxaGetBox(valid_boxes, j, L_CLONE);
-			//printf("st_point=(%3d,%3d),ed_point=(%3d,%3d)\n", st_point->x, st_point->y, ed_point->x, ed_point->y);
+		for (int j = 0; j < all_boxes->n; j++){
+			ed_point = boxaGetBox(all_boxes, j, L_CLONE);
 			//2つの単語の中心座標を取得し、そのベクトルを求める
 			vec = getVector(st_point, ed_point);
 			Box_array st_center = getCenterPoint(st_point); //開始位置の中心
@@ -245,8 +236,7 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 				if (ed_center.x - st_center.x < min_x){
 					min_x = ed_center.x - st_center.x;
 					next_word = ed_point;
-					//printf("st_point=(%3d,%3d,%3d,%3d),ed_point=(%3d,%3d,%3d,%3d), min_x=%3d ,vec_cos=%lf\n", st_point->x, st_point->y, st_point->w, st_point->h, ed_point->x, ed_point->y, ed_point->w, ed_point->h, min_x, vec_cos);
-					//printf("st_center=(%lf,%lf) , ed_center=(%lf,%lf)\n", st_center.x, st_center.y, ed_center.x, ed_center.y);
+					printf("ed_center.x - st_center.x=%lf, next_word=(%d,%d,%d,%d)\n", ed_center.x - st_center.x, next_word->x, next_word->y, next_word->w, next_word->h);
 				}
 			}
 		}
@@ -266,7 +256,7 @@ Boxa* findFollowWord(BOX* l_box,Boxa* v_boxes){
 	return line_boxes;
 }
 
-// 一行分の高さを求める , 入力=全単語列(valid_boxes)
+// 一行分の高さを求める , 入力=全単語列
 //全単語列の高さでヒストグラムを作成する。ヒストグラムから最頻値を求め、最頻値のビンの区間中央値を一行分の高さとする。
 double findMode(Boxa* boxes){
 	double class_num = ceil(1 + log2((double)boxes->n)); //階級の数 スタージェスの公式: class_num = 1+log2n round=最も近い整数値に丸める
@@ -304,7 +294,7 @@ double findMode(Boxa* boxes){
 	line_h = (rank_min + rank_max) / 2; //上限と下限の平均をとる
 	printf("rank : min=%lf, max=%lf, line_h=%lf\n", rank_min, rank_max, line_h);
 	printf("return value = %lf\n", line_h * 2);
-	return line_h * 2; //一行の高さの2.5倍(二行の高さ)を返り値とする。
+	return line_h * 2; //一行の高さの2倍(二行の高さ)を返り値とする。
 }
 
 // 行間を見つける
@@ -342,16 +332,6 @@ Bet_lines findLineSpacing(Mat pro_img, Mat word_img, int num){ //入力= 投影�
 		bt_edge--;
 	}
 
-	//上端から文字を囲う
-	rectangle(map, Point(0, 0), Point(word_img.size().width, up_edge), Scalar(0, 0, 255), 1, 1);
-	Rect up_rect(Point(0, 0), Point(word_img.size().width, up_edge));
-	Mat up_img(word_img, up_rect);
-	imwrite("../image/long_images/up_images/up_img_" + to_string(num) + ".png", up_img);
-	//下端から文字を囲う
-	rectangle(map, Point(0, bt_edge), Point(word_img.size().width, word_img.size().height), Scalar(0, 0, 255), 1, 1);
-	Rect bt_rect(Point(0, bt_edge), Point(word_img.size().width, word_img.size().height));
-	Mat bt_img(word_img, bt_rect);
-	imwrite("../image/long_images/bt_images/bt_img_" + to_string(num) + ".png", bt_img);
 	//結果をファイルへ出力
 	fls << "i=" << num << endl;
 	fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << "), up_box.h=" << up_edge << endl;
@@ -359,7 +339,6 @@ Bet_lines findLineSpacing(Mat pro_img, Mat word_img, int num){ //入力= 投影�
 	imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
 
 	Bet_lines edge = { up_edge, bt_edge };
-	printf("return\n");
 	return  edge;
 }
 
@@ -381,6 +360,7 @@ Boxa* divideImage(Boxa* boxes, Mat img){
 		BOX* box = boxaGetBox(boxes, i, L_CLONE);
 		Rect rect(box->x, box->y, box->w, box->h);
 		Mat long_img(bn_img, rect);
+		lng << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", long_img=" << endl << long_img / 255 << endl;
 		Mat project_img; //投影結果
 		reduce(long_img, project_img, 1, CV_REDUCE_SUM, CV_32S); //列ごとの合計を求める,出力はint型
 		pjt << "i=" << i << ", long_img.width=" << long_img.size().width << ", long_img.height=" << long_img.size().height << ", project_img=" << endl << project_img / 255 << endl;
@@ -396,6 +376,7 @@ Boxa* divideImage(Boxa* boxes, Mat img){
 int main()
 {	
 	ofstream content("../image/component.txt");
+	ofstream tgt_content("../image/tgt_component.txt");
 	
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
@@ -452,7 +433,7 @@ int main()
 		char* ocrResult = api2->GetUTF8Text();
 		int conf = api2->MeanTextConf();
 		content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
-		outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
+		//outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
 		rectangle(valid_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
 		imwrite("../image/splitImages/map_word_valid.png", valid_map);
 	}
@@ -492,6 +473,8 @@ int main()
 		BOX* box = boxaGetBox(tgt_boxes, i, L_CLONE);
 		rectangle(all_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 255), 1, 1);
 		imwrite("../image/long_images/all_map_word.png", all_map);
+		//outputPartImage(box, "../image/splitImages/target_boxes/tgt_", mat_para_img, i);
+		tgt_content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 	}
 
 	// 全ての行の先頭単語を見つける , 入力=全単語列
@@ -511,6 +494,7 @@ int main()
 	// 全行の単語列を書き出す
 	ofstream s_boxas("../image/sentence_boxas.txt");
 	for (int i = 0; i < sentence_boxas->n; i++){
+		s_boxas << i+1 << endl;
 		Boxa* boxes = boxaaGetBoxa(sentence_boxas,i,L_CLONE);
 		for (int j = 0; j < boxes->n;j++){
 			BOX* box = boxaGetBox(boxes, j, L_CLONE);
@@ -522,6 +506,7 @@ int main()
 			imwrite("../image/splitImages/map_sentence.png", sentence_map);
 			imwrite("../image/splitImages/mapsentence/map_sentence_" + to_string(i) + ".png", sentence_map);
 			s_boxas << "sentence_boxas[" << i << "][" << j << "],x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+			s_boxas << box->x << "," << box->y << "," << box->w << "," << box->h << endl;
 		}
 	}
 }

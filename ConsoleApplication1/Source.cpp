@@ -308,7 +308,7 @@ Bet_lines findLineSpacing(Mat pro_img, Mat word_img, int num){ //入力= 投影�
 
 	printf("num=%d\n", num);
 	for (int i = 0; i < pro_img.size().height; i++){
-		if (pro_img.at<int>(i, 0) / 255 == word_img.size().width){ //i行0列の値が単語画像の幅と同じであれば
+		if (pro_img.at<int>(i, 0) == 0){ //i行の値が0(空白)であればその場所を記録
 			space_cnt++;
 			if (space_cnt > max){
 				max = space_cnt;
@@ -336,7 +336,7 @@ Bet_lines findLineSpacing(Mat pro_img, Mat word_img, int num){ //入力= 投影�
 	fls << "i=" << num << endl;
 	fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << "), up_box.h=" << up_edge << endl;
 	fls << "bt_box=(0, " << bt_edge << ") -- (" << word_img.size().width << ", " << word_img.size().height << "), bt_box.h=" << word_img.size().height - bt_edge << endl << endl;
-	imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
+	//imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
 
 	Bet_lines edge = { up_edge, bt_edge };
 	return  edge;
@@ -353,8 +353,8 @@ Boxa* divideImage(Boxa* boxes, Mat img){
 	Boxa* edge_box = boxaCreate(100); //分割した抽出枠を格納する配列
 
 	cvtColor(img, gray_img, CV_RGB2GRAY); //元画像をグレースケール画像に変更する
-	threshold(gray_img, bn_img, 0, 255, THRESH_BINARY | THRESH_OTSU); //大津の方法で二値化する
-	imwrite("../image/long_images/bn_image.png", bn_img);
+	threshold(gray_img, bn_img, 0, 255, THRESH_BINARY_INV | THRESH_OTSU); //大津の方法で求めた閾値以上であれば0、それ以下であれば255
+	//imwrite("../image/long_images/bn_image.png", bn_img);
 
 	for (int i = 0; i < boxes->n; i++){
 		BOX* box = boxaGetBox(boxes, i, L_CLONE);
@@ -404,7 +404,7 @@ int main()
 	for (int i = 0; i < word_boxes->n; i++){
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
 		rectangle(pw_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
-		imwrite("../image/splitImages/map_word.png", pw_map);
+		//imwrite("../image/splitImages/map_word.png", pw_map);
 	}
 
 	Mat valid_map = mat_para_img.clone();
@@ -435,7 +435,7 @@ int main()
 		content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 		//outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
 		rectangle(valid_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		imwrite("../image/splitImages/map_word_valid.png", valid_map);
+		//imwrite("../image/splitImages/map_word_valid.png", valid_map);
 	}
 
 	// 二行に渡る抽出枠を縦方向に分割する

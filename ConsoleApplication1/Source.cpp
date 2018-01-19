@@ -139,7 +139,7 @@ Boxa* setStartPosition(Boxa* boxes){
 	sort_xboxes = boxaSort(boxes, L_SORT_BY_X, L_SORT_INCREASING, NULL);
 	for (int i = 0; i < sort_xboxes->n; i++){
 		BOX* box = boxaGetBox(sort_xboxes, i, L_CLONE);
-		sortx << "sorted_x[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+		//sortx << "sorted_x[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 	}
 
 	//ソートした配列の先頭から100個の単語を行の先頭候補として別の配列に格納する
@@ -153,7 +153,7 @@ Boxa* setStartPosition(Boxa* boxes){
 	for (int i = 0; i < sort_yboxes->n; i++){
 		BOX* box = boxaGetBox(sort_yboxes, i, L_CLONE);
 		rectangle(ysort_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 255, 0), 1, 4);
-		//imwrite("../image/splitImages/map_word_ysort.png", ysort_map);
+		imwrite("../image/splitImages/map_word_ysort.png", ysort_map);
 		//sorty << "sorted_y[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 	}
 
@@ -183,7 +183,7 @@ Boxa* setStartPosition(Boxa* boxes){
 		BOX* box = boxaGetBox(leading_boxes, i, L_CLONE);
 		lboxes << "leading_boxes[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 		rectangle(leading_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		//imwrite("../image/splitImages/map_word_leading.png", leading_map);
+		imwrite("../image/splitImages/map_word_leading.png", leading_map);
 	}
 	return leading_boxes;
 }
@@ -336,7 +336,7 @@ Bet_lines findLineSpacing(Mat pro_img, Mat word_img, int num){ //入力= 投影�
 	fls << "i=" << num << endl;
 	fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << "), up_box.h=" << up_edge << endl;
 	fls << "bt_box=(0, " << bt_edge << ") -- (" << word_img.size().width << ", " << word_img.size().height << "), bt_box.h=" << word_img.size().height - bt_edge << endl << endl;
-	//imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
+	imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
 
 	Bet_lines edge = { up_edge, bt_edge };
 	return  edge;
@@ -354,7 +354,7 @@ Boxa* divideImage(Boxa* boxes, Mat img){
 
 	cvtColor(img, gray_img, CV_RGB2GRAY); //元画像をグレースケール画像に変更する
 	threshold(gray_img, bn_img, 0, 255, THRESH_BINARY_INV | THRESH_OTSU); //大津の方法で求めた閾値以上であれば0、それ以下であれば255
-	//imwrite("../image/long_images/bn_image.png", bn_img);
+	imwrite("../image/long_images/bn_image.png", bn_img);
 
 	for (int i = 0; i < boxes->n; i++){
 		BOX* box = boxaGetBox(boxes, i, L_CLONE);
@@ -404,7 +404,7 @@ int main()
 	for (int i = 0; i < word_boxes->n; i++){
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
 		rectangle(pw_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
-		//imwrite("../image/splitImages/map_word.png", pw_map);
+		imwrite("../image/splitImages/map_word.png", pw_map);
 	}
 
 	Mat valid_map = mat_para_img.clone();
@@ -435,7 +435,7 @@ int main()
 		content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
 		//outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
 		rectangle(valid_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
-		//imwrite("../image/splitImages/map_word_valid.png", valid_map);
+		imwrite("../image/splitImages/map_word_valid.png", valid_map);
 	}
 
 	// 二行に渡る抽出枠を縦方向に分割する
@@ -473,7 +473,7 @@ int main()
 		BOX* box = boxaGetBox(tgt_boxes, i, L_CLONE);
 		rectangle(all_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 255), 1, 1);
 		imwrite("../image/long_images/all_map_word.png", all_map);
-		//outputPartImage(box, "../image/splitImages/target_boxes/tgt_", mat_para_img, i);
+		outputPartImage(box, "../image/splitImages/target_boxes/tgt_", mat_para_img, i);
 		tgt_content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 	}
 

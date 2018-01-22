@@ -373,6 +373,20 @@ Boxa* divideImage(Boxa* boxes, Mat img){
 	return edge_box;
 }
 
+/*
+// 同じ単語を含む行配列を見つける
+Boxaa* findDeplication(Boxaa* boxas){
+	for (int i = 0; i < boxas->n; i++){
+		Boxa* boxes = boxaaGetBoxa(boxas, i, L_CLONE);
+		for (int j = 0; j < boxes->n; j++){
+			BOX* box = boxaGetBox(boxes, j, L_CLONE);
+			
+		}
+	}
+
+}
+*/
+
 int main()
 {
 	ofstream content("../image/component.txt");
@@ -505,7 +519,8 @@ int main()
 			rectangle(sentence_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), setColor(ci), 1, 4);
 			imwrite("../image/splitImages/map_sentence.png", sentence_map);
 			imwrite("../image/splitImages/mapsentence/map_sentence_" + to_string(i) + ".png", sentence_map);
-			s_boxas << "sentence_boxas[" << i << "][" << j << "],x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+			//s_boxas << "sentence_boxas[" << i << "][" << j << "],x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
+			s_boxas <<  i << "," << j << "," << box->x << "," << box->y << "," << box->w << "," << box->h << endl;
 		}
 	}
 }

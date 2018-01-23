@@ -23,8 +23,8 @@ using namespace std;
 using namespace tesseract;
 
 // グローバル変数
-Mat src = imread("../../../source_images/img1_3_2.jpg", 1); //入力画像
-Pix *image = pixRead("../../../source_images/img1_3_2.jpg"); //入力画像(tesseract,leptonicaで使用する型)
+Mat src = imread("../../../source_images/vrs_orientation/front.jpg", 1); //入力画像
+Pix *image = pixRead("../../../source_images/vrs_orientation/front.jpg"); //入力画像(tesseract,leptonicaで使用する型)
 Mat para_map = src.clone();
 Mat mat_para_img; //抽出した段落画像
 ofstream fls("../image/long_images/line_spacing.txt");
@@ -333,9 +333,9 @@ Bet_lines findLineSpacing(Mat pro_img, Mat word_img, int num){ //入力= 投影�
 	}
 
 	//結果をファイルへ出力
-	fls << "i=" << num << endl;
-	fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << "), up_box.h=" << up_edge << endl;
-	fls << "bt_box=(0, " << bt_edge << ") -- (" << word_img.size().width << ", " << word_img.size().height << "), bt_box.h=" << word_img.size().height - bt_edge << endl << endl;
+	//fls << "i=" << num << endl;
+	//fls << "up_box=(0, 0) -- (" << word_img.size().width << ", " << up_edge << "), up_box.h=" << up_edge << endl;
+	//fls << "bt_box=(0, " << bt_edge << ") -- (" << word_img.size().width << ", " << word_img.size().height << "), bt_box.h=" << word_img.size().height - bt_edge << endl << endl;
 	//imwrite("../image/long_images/map_ls_" + to_string(num) + ".png", map);
 
 	Bet_lines edge = { up_edge, bt_edge };
@@ -486,7 +486,7 @@ int main()
 	for (int i = 0; i < tgt_boxes->n; i++){
 		BOX* box = boxaGetBox(tgt_boxes, i, L_CLONE);
 		rectangle(all_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 255), 1, 1);
-		imwrite("../image/long_images/all_map_word.png", all_map);
+		imwrite("../image/splitImages/all_map_word.png", all_map);
 		//outputPartImage(box, "../image/splitImages/target_boxes/tgt_", mat_para_img, i);
 		//tgt_content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 	}
@@ -508,7 +508,7 @@ int main()
 	// 全行の単語列を書き出す
 	ofstream s_boxas("../image/sentence_boxas.txt");
 	for (int i = 0; i < sentence_boxas->n; i++){
-		s_boxas << i + 1 << endl;
+		//s_boxas << i + 1 << endl;
 		Boxa* boxes = boxaaGetBoxa(sentence_boxas, i, L_CLONE);
 		for (int j = 0; j < boxes->n; j++){
 			BOX* box = boxaGetBox(boxes, j, L_CLONE);
@@ -520,7 +520,7 @@ int main()
 			imwrite("../image/splitImages/map_sentence.png", sentence_map);
 			//imwrite("../image/splitImages/mapsentence/map_sentence_" + to_string(i) + ".png", sentence_map);
 			//s_boxas << "sentence_boxas[" << i << "][" << j << "],x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
-			s_boxas << i << "," << j << "," << box->x << "," << box->y << "," << box->w << "," << box->h << endl;
+			//s_boxas << i << "," << j << "," << box->x << "," << box->y << "," << box->w << "," << box->h << endl;
 		}
 	}
 }

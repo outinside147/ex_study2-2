@@ -23,10 +23,10 @@ using namespace std;
 using namespace tesseract;
 
 // グローバル変数
-Mat src = imread("../../../source_images/vrs_orientation/front.jpg", 1); //入力画像
-Pix *image = pixRead("../../../source_images/vrs_orientation/front.jpg"); //入力画像(tesseract,leptonicaで使用する型)
-Mat para_map = src.clone();
-Mat mat_para_img; //抽出した段落画像
+Mat src = imread("../../../source_images/img1_3_2.jpg", 1);
+Pix *image = pixRead("../../../source_images/img1_3_2.jpg");
+//Mat src = imread("../../../source_images/vrs_orientation/front_tr.jpg", 1); //入力画像
+//Pix *image = pixRead("../../../source_images/vrs_orientation/front_tr.jpg"); //入力画像(tesseract,leptonicaで使用する型)
 ofstream fls("../image/long_images/line_spacing.txt");
 
 
@@ -131,9 +131,9 @@ Boxa* setStartPosition(Boxa* boxes){
 	Boxa* sort_yboxes = boxaCreate(100);
 	Boxa* leading_boxes = boxaCreate(100);
 
-	Mat xsort_map = mat_para_img.clone();
-	Mat ysort_map = mat_para_img.clone();
-	Mat leading_map = mat_para_img.clone();
+	Mat xsort_map = src.clone();
+	Mat ysort_map = src.clone();
+	Mat leading_map = src.clone();
 
 	//xの昇順でソート
 	sort_xboxes = boxaSort(boxes, L_SORT_BY_X, L_SORT_INCREASING, NULL);
@@ -395,34 +395,17 @@ int main()
 	TessBaseAPI *api = new TessBaseAPI();
 	api->Init(NULL, "eng");
 	api->SetImage(image);
-	//画像中の段落を抽出する
-	Boxa* para_boxes = api->GetComponentImages(RIL_PARA, true, NULL, NULL);
 
-	// 文書画像から段落を抽出する
-	for (int i = 0; i < para_boxes->n; i++) {
-		BOX* box = boxaGetBox(para_boxes, i, L_CLONE); //boxes->n .. number of box in ptr array
-		// 分割した範囲を書き出す
-		Rect rect(box->x, box->y, box->w, box->h);
-		Mat part_img(src, rect);
-		mat_para_img = part_img;
-		imwrite("../image/splitImages/para.png", part_img);
-	}
-
-	// 抜き出した段落画像をTesseractで認識させる
-	Mat pw_map = mat_para_img.clone();
-	Pix *para_img = pixRead("../image/splitImages/para.png");
-	TessBaseAPI *api2 = new TessBaseAPI();
-	api2->Init(NULL, "eng");
-	api2->SetImage(para_img);
-	Boxa* word_boxes = api2->GetComponentImages(RIL_WORD, true, NULL, NULL); //単語
+	Mat word_map = src.clone();
+	Boxa* word_boxes = api->GetComponentImages(RIL_WORD, true, NULL, NULL);
 	for (int i = 0; i < word_boxes->n; i++){
 		BOX* box = boxaGetBox(word_boxes, i, L_CLONE);
-		rectangle(pw_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
-		//imwrite("../image/splitImages/map_word.png", pw_map);
+		rectangle(word_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 0), 1, 4);
+		//imwrite("../image/splitImages/map_word.png", word_map);
 	}
 
-	Mat valid_map = mat_para_img.clone();
-	Mat sentence_map = mat_para_img.clone();
+	Mat valid_map = src.clone();
+	Mat sentence_map = src.clone();
 
 	Boxa* valid_boxes = boxaCreate(word_boxes->n); //小さな抽出枠を取り除いた単語列
 	Boxa* long_boxes = boxaCreate(word_boxes->n); //縦長の単語列
@@ -443,11 +426,11 @@ int main()
 	// 単語単位での認識結果を書き出す
 	for (int i = 0; i < valid_boxes->n; i++) {
 		BOX* box = boxaGetBox(valid_boxes, i, L_CLONE);
-		api2->SetRectangle(box->x, box->y, box->w, box->h);
-		char* ocrResult = api2->GetUTF8Text();
-		int conf = api2->MeanTextConf();
+		api->SetRectangle(box->x, box->y, box->w, box->h);
+		char* ocrResult = api->GetUTF8Text();
+		int conf = api->MeanTextConf();
 		//content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << ", confidence=" << conf << ", text= " << ocrResult << endl;
-		//outputPartImage(box, "../image/splitImages/word_", mat_para_img, i);
+		//outputPartImage(box, "../image/splitImages/word_", src, i);
 		rectangle(valid_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(0, 0, 255), 1, 4);
 		//imwrite("../image/splitImages/map_word_valid.png", valid_map);
 	}
@@ -464,7 +447,7 @@ int main()
 	}
 
 	//縦長の画像を分割する
-	div_boxes = divideImage(long_boxes, mat_para_img); //縦長の画像を分割する
+	div_boxes = divideImage(long_boxes, src); //縦長の画像を分割する
 
 	//分割後の画像を探索配列に格納する
 	for (int i = 0; i < div_boxes->n; i++){
@@ -481,13 +464,13 @@ int main()
 		}
 	}
 
-	Mat all_map = mat_para_img.clone();
+	Mat all_map = src.clone();
 	//全単語を出力する
 	for (int i = 0; i < tgt_boxes->n; i++){
 		BOX* box = boxaGetBox(tgt_boxes, i, L_CLONE);
 		rectangle(all_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), Scalar(255, 0, 255), 1, 1);
 		imwrite("../image/splitImages/all_map_word.png", all_map);
-		//outputPartImage(box, "../image/splitImages/target_boxes/tgt_", mat_para_img, i);
+		//outputPartImage(box, "../image/splitImages/target_boxes/tgt_", src, i);
 		//tgt_content << "Word_Box[" << i << "]: x=" << box->x << ", y=" << box->y << ", w=" << box->w << ", h=" << box->h << endl;
 	}
 
@@ -513,7 +496,7 @@ int main()
 		for (int j = 0; j < boxes->n; j++){
 			BOX* box = boxaGetBox(boxes, j, L_CLONE);
 			Rect rect(box->x, box->y, box->w, box->h);
-			Mat part_img(mat_para_img, rect);
+			Mat part_img(src, rect);
 			//imwrite("../image/splitImages/s_boxas_" + to_string(i) + "_" + to_string(j) + ".png", part_img);
 			int ci = i % 4;
 			rectangle(sentence_map, Point(box->x, box->y), Point(box->x + box->w, box->y + box->h), setColor(ci), 1, 4);
